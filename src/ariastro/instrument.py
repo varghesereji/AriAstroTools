@@ -101,7 +101,7 @@ class Handle_NEID:
             header['SSBZ'+strnum] = 0
             zfacts.append(float(zfact))
         zfacts = np.array(zfacts)
-        corr_wl_array = (wl_array.T * zfacts).T
+        corr_wl_array = (wl_array.T * (1+zfacts)).T
 
         return corr_wl_array, header
 
