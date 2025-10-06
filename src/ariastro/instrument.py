@@ -161,6 +161,7 @@ class Handle_NEID:
             corr_var = var / blaze ** 2
             datadict[flux_kw] = corr_flux
             datadict[var_kw] = corr_var
+            datadict[wl_kw] = corr_wl
             datadict[blaze_kw] = newblaze
         if contnorm:
             from .spectral_utils import continuum_normalize
