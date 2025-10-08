@@ -203,7 +203,7 @@ def combine_spectra(filesre="*.fits", directory=".",
                     fluxext=(1, 2, 3),
                     varext=(4, 5, 6),
                     wlext=(7, 8, 9),
-                    orders=(173, 52)):
+                    req_qtys=None):
     '''
     Function to combine spectra.
     Input
@@ -228,7 +228,6 @@ def combine_spectra(filesre="*.fits", directory=".",
     if instrumentname is not None:
         instrument = instrument_dict[instrumentname]()
         fluxext, varext, wlext = instrument.fits_extensions()
-    req_qtys = None
     req_qtys_dict = defaultdict(list)
     req_qtys_dict_fullext = {}
     for cro, specfile in enumerate(files_list):
