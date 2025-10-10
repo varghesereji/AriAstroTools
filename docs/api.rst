@@ -7,7 +7,6 @@ This section contains the API documentation for all modules in **AriAstro**.
    :maxdepth: 2
    :caption: Modules
 
-   source/ariastro_main
    source/operations
    source/utils
    source/handle_frame
