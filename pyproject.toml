@@ -17,7 +17,8 @@ dependencies = [
     "numpy>=1.21",
     "pyfiglet",
     "colorama",
-    "specutils"
+    "specutils",
+    "astroscrappy"
 ]
 keywords = ["example", "package"]
 classifiers = [
