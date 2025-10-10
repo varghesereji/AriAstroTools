@@ -14,6 +14,15 @@ author = "Varghese Reji"
 # -- General configuration ---------------------------------------------------
 sys.path.insert(0, str(Path(__file__).parent.parent.resolve()))
 
+# List of modules to mock so autodoc won't fail when building docs
+autodoc_mock_imports = [
+    "astroscrappy",
+    "scipy",
+    "scipy.ndimage",
+    "numpy",
+    "astropy"
+]
+
 extensions = [
     "sphinx.ext.autodoc",     # Auto-generate docs from docstrings
     "sphinx.ext.napoleon",    # Support for Google/NumPy style docstrings
