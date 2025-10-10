@@ -375,6 +375,72 @@ def remove_cosmic_rays(input_fname,
                        opfilename,
                        fluxext=[0],
                        varext=None):
+    """
+    Remove cosmic rays from FITS image extensions using ``astroscrappy``.
+
+    This function reads one or more image extensions from a FITS file,
+    detects and removes cosmic rays using the ``astroscrappy.detect_cosmics``
+    algorithm, and writes the cleaned images (along with cosmic-ray masks
+    and optional variance extensions) into a new output FITS file.
+
+    Parameters
+    ----------
+    input_fname : str
+        Path to the input FITS file containing the image data.
+
+    opfilename : str
+        Path to the output FITS file where the cosmic-ray-cleaned data
+        will be written.
+
+    fluxext : list of int, optional
+        List of extension indices in the input FITS file that contain
+        image data to be cleaned. Default is ``[0]`` (the primary HDU).
+
+    varext : list of int or None, optional
+        List of extension indices corresponding to variance data for
+        each flux extension. If provided, the same indices are used to
+        fetch the variance arrays and pass them to
+        ``astroscrappy.detect_cosmics`` for improved detection. If
+        ``None`` (default), cosmic-ray detection is run without variance
+        information.
+
+    Notes
+    -----
+    - The function uses the ``astroscrappy`` implementation of the LA
+      Cosmic algorithm to detect and remove cosmic rays.
+    - For each processed image extension, the following are written to
+      the output file:
+
+        * The cleaned image data
+        * (Optionally) the corresponding variance extension, if
+          ``varext`` is given
+        * A binary mask extension named ``CRMASK`` with 1 where cosmic
+          rays were detected
+
+    - A ``HISTORY`` keyword is added to the header indicating that
+      cosmic rays were removed with ``astroscrappy``.
+
+    Output Structure
+    ----------------
+    The output FITS file will contain, in order:
+
+        1. Cleaned image(s) in the same order as ``fluxext``
+        2. Optional variance image(s), if ``varext`` is provided
+        3. Corresponding cosmic-ray mask(s) named ``CRMASK``
+
+    Example
+    -------
+    >>> remove_cosmic_rays(
+    ...     "raw_image.fits",
+    ...     "cleaned_image.fits",
+    ...     fluxext=[1, 2],
+    ...     varext=[3, 4]
+    ... )
+
+    This reads extensions 1 and 2 as flux images, uses extensions 3 and
+    4 as variance maps, removes cosmic rays, and writes a cleaned file
+    containing the corrected images, variance maps, and cosmic-ray masks.
+    """
     primary_hdu = fits.PrimaryHDU()
     hdul = fits.HDUList([primary_hdu])
     for index, ext in enumerate(fluxext):
