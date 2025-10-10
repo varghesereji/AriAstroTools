@@ -231,6 +231,10 @@ def combine_process(files,
     elif isinstance(files, str):
         files_path = Path(path)
         files_list = files_path.glob(files)
+        if not files_list:
+            raise FileNotFoundError(
+                f"No files found matching {files} in {path}"
+            )
     else:
         print("Enter either files list or the regular expression")
 
