@@ -1,4 +1,4 @@
-handle_frame module
+handle frame module
 ==============
 
 .. automodule:: ariastro.handle_frame

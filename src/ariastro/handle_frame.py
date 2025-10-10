@@ -1,5 +1,17 @@
 #!/usr/bin/env python3
 
+"""
+This module contains functions for processing astronomical FITS frames.
+Includes functions for arithmetic operations, combining data,
+removing cosmic rays, and smoothing gradients.
+
+Functions:
+- operate_process
+- combine_process
+- divide_smoothgradient
+- remove_cosmic_rays
+"""
+
 import numpy as np
 import astroscrappy
 from scipy.ndimage import filters
