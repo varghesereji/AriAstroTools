@@ -39,9 +39,9 @@ def interpolation_spectra(fulldata, fluxext, wlext, varext):
     keys = list(fulldata.keys())
     for index, wext in enumerate(wlext):
         # Goint though sci, cal and sky
-        fext = fluxext[index]
-        vext = varext[index]
-        header_wl = keys[wext]
+        fext = int(fluxext[index])
+        vext = int(varext[index])
+        header_wl = keys[int(wext)]
         header_fl = keys[fext]
         header_va = keys[vext]
         # print(header_wl, header_fl, header_va)
@@ -212,7 +212,7 @@ def combine_spectra(filesre="*.fits", directory=".",
     directory: data directory.
     fluxext: extension for flux array.
     '''
-    # print(filesre)
+    print(filesre)
     if isinstance(filesre, list):
         files_list = filesre
     elif isinstance(filesre, str):
@@ -232,7 +232,6 @@ def combine_spectra(filesre="*.fits", directory=".",
     req_qtys_dict_fullext = {}
     for cro, specfile in enumerate(files_list):
         specfile = Path(specfile)
-        # print(specfile)
         logger.info("{} {}".format(cro, specfile))
         file_list.append(specfile.name)
         if instrumentname is not None:
@@ -252,7 +251,6 @@ def combine_spectra(filesre="*.fits", directory=".",
             headerdict_main = headerdict
 
         for hduname, data in datadict.items():
-            # print(hduname)
             data_dict[hduname].append(data)
     # print("data_dict", np.array(data_dict["SCIWAVE"])[:, 50])
     interp_data_dict = interpolation_spectra(data_dict, fluxext, wlext, varext)
@@ -267,8 +265,10 @@ def combine_spectra(filesre="*.fits", directory=".",
                     qty_method = method
                 comb_qty = combine_data(value, method=qty_method)
                 headerdict_main[extname][qty] = comb_qty[0]
-    combined_dict = combine_data_full(interp_data_dict, method=method)
-    # # print(combined_dict)
+    combined_dict = combine_data_full(interp_data_dict, method=method,
+                                      dataext=fluxext,
+                                      varext=varext)
+    # print(combined_dict)
     dict_keys = list(headerdict_main.keys())
 
     headerdict_main[dict_keys[0]]['HISTORY'] = "{} {}".format(method,

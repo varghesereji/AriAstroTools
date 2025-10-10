@@ -10,6 +10,7 @@ from .setups import read_args
 
 from .handle_frame import operate_process
 from .handle_frame import combine_process
+from .spectral_utils import combine_spectra
 
 
 def setup_logging():
@@ -47,13 +48,22 @@ def main():
 
     if args.mode == 'combine':
         print(fnames)
-        combine_process(fnames,
-                        args.output,
-                        method=args.method,
-                        fluxext=args.flux,
-                        varext=args.var,
-                        instrument=args.instrument
-                        )
+        if args.wl is None:
+            combine_process(fnames,
+                            args.output,
+                            method=args.method,
+                            fluxext=args.flux,
+                            varext=args.var,
+                            instrument=args.instrument
+                            )
+        else:
+            combine_spectra(fnames,
+                            opfilename=args.output,
+                            method=args.method,
+                            fluxext=args.flux,
+                            varext=args.var,
+                            wlext=args.wl)
+            
     elif args.mode == 'operation':
         file1, file2 = fnames
 

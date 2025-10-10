@@ -275,10 +275,11 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
     """
 
     dictkeys = list(datadict.keys())
+    print(dictkeys)
     comb_dicts = datadict.copy()
     # print("comb data full", np.array(datadict["SCIFLUX"]).shape)
-    flux_keys = [dictkeys[i] for i in dataext]
-    var_keys = [dictkeys[i] for i in varext]
+    flux_keys = [dictkeys[int(i)] for i in dataext]
+    var_keys = [dictkeys[int(i)] for i in varext]
 
     # Avoiding the extensions that are not flux or variance.
     # Taking only the first element of that. i.e.,
@@ -288,7 +289,9 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
     # same array. So, that also
     # copied in the same way.
     for cro, keys in enumerate(dictkeys):
+        print(keys, flux_keys, var_keys)
         if keys not in flux_keys + var_keys:
+            print('keys', keys)
             comb_dicts[keys] = comb_dicts[keys][0]
     # Doing for flux and variance.
     for index, extk in enumerate(flux_keys):
@@ -300,6 +303,7 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
         comb_dicts[flux_keys[index]] = comb_flux
         comb_dicts[var_keys[index]] = comb_var
     # print(datadict[flux_keys[0]].shape)
+    # print(comb_dicts)
     return comb_dicts
 
 # End
