@@ -230,7 +230,7 @@ def combine_process(files,
         files_list = files
     elif isinstance(files, str):
         files_path = Path(path)
-        files_list = files_path.glib(files)
+        files_list = files_path.glob(files)
     else:
         print("Enter either files list or the regular expression")
 
