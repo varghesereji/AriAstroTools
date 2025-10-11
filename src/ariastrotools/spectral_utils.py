@@ -152,7 +152,7 @@ def continuum_normalize(datadict, flux_exts=[1],
 
     Examples
     --------
-    >>> from ariastro.utils import continuum_normalize
+    >>> from ariastrotools.utils import continuum_normalize
     >>> norm_datadict = continuum_normalize(datadict, flux_exts=[1,2,3],
     ...                                     var_exts=[4,5,6],
     ...                                     wl_exts=[7,8,9])

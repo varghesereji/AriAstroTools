@@ -1,7 +1,7 @@
 handle frame module
 ==============
 
-.. automodule:: ariastro.handle_frame
+.. automodule:: ariastrotools.handle_frame
    :members:
    :undoc-members:
    :show-inheritance:

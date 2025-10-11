@@ -1,7 +1,7 @@
 import logging
 import sys
 
-logger = logging.getLogger("AriAstro")
+logger = logging.getLogger("AriAstroTools")
 logger.setLevel(logging.INFO)
 
 # Console handler

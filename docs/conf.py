@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 
 # -- Project information -----------------------------------------------------
-project = "AriAstro"
+project = "AriAstroTools"
 copyright = "2025, Varghese Reji"
 author = "Varghese Reji"
 

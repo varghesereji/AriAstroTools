@@ -1,10 +1,10 @@
 import numpy as np
 import pytest
 
-from ariastro.operations import ari_operations
-from ariastro.operations import combine_data
-from ariastro.operations import combine_data_full
-from ariastro.operations import weighted_mean_and_variance
+from ariastrotools.operations import ari_operations
+from ariastrotools.operations import combine_data
+from ariastrotools.operations import combine_data_full
+from ariastrotools.operations import weighted_mean_and_variance
 
 
 @pytest.mark.parametrize(

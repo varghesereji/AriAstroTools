@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from astropy.io import fits
 
-from ariastro.handle_frame import remove_cosmic_rays
+from ariastrotools.handle_frame import remove_cosmic_rays
 
 
 @pytest.fixture

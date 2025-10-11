@@ -1,7 +1,7 @@
-ariastro
+ariastrotools
 ========
 
 .. toctree::
    :maxdepth: 4
 
-   ariastro
+   ariastrotools

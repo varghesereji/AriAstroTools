@@ -1,17 +1,17 @@
 Installation
 ==============
-Install AriAstro via pip:
+Install AriAstroTools via pip:
 
 .. code-block:: bash
 
-   pip install git+https://github.com/varghesereji/AriAstro
+   pip install git+https://github.com/varghesereji/AriAstroTools
 
 Or from source:
 
 .. code-block:: bash
 
-   git clone https://github.com/varghesereji/AriAstro.git
-   cd AriAstro
+   git clone https://github.com/varghesereji/AriAstroTools.git
+   cd AriAstroTools
    pip install .
 
 NB: Recommended to install the package in a new environment.

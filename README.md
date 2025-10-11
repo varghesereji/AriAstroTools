@@ -1,4 +1,4 @@
-# AriAstro
+# AriAstroTools
 Package to combine, divide or add spectra and images
 
 
@@ -11,5 +11,5 @@ The **Flexible Image Transport System (FITS)** is the standard file format used 
 
 ## Documentation
 
-[AriAstro Documentation](https://varghesereji.github.io/AriAstro/)
+[AriAstroTools Documentation](https://varghesereji.github.io/AriAstroTools/)
 

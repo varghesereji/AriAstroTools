@@ -1,7 +1,7 @@
 operations module
 ====================
 
-.. automodule:: ariastro.operations
+.. automodule:: ariastrotools.operations
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,7 +1,7 @@
 API Reference
 =============
 
-This section contains the API documentation for all modules in **AriAstro**.
+This section contains the API documentation for all modules in **AriAstroTools**.
 
 .. toctree::
    :maxdepth: 2

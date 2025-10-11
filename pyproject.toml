@@ -3,7 +3,7 @@ requires = ["setuptools>=75.3.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "AriAstro"
+name = "AriAstroTools"
 version = "0"
 description = "Package to combine fits files."
 readme = "README.md"
@@ -28,8 +28,8 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/varghesereji/AriAstro"
-"Repository" = "https://github.com/varghesereji/AriAstro"
+"Homepage" = "https://github.com/varghesereji/AriAstroTools"
+"Repository" = "https://github.com/varghesereji/AriAstroTools"
 
 [project.scripts]
-ariastro = "ariastro.ariastro_main:main"
+ariastrotools = "ariastrotools.ariastro_main:main"

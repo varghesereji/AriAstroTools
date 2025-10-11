@@ -1,7 +1,7 @@
 utils module
 ====================
 
-.. automodule:: ariastro.utils
+.. automodule:: ariastrotools.utils
    :members:
    :undoc-members:
    :show-inheritance:

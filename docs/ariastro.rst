@@ -1,69 +1,69 @@
-ariastro package
+ariastrotools package
 ================
 
 Submodules
 ----------
 
-ariastro.ariastro\_main module
+ariastrotools.ariastrotools\_main module
 ------------------------------
 
-.. automodule:: ariastro.ariastro_main
+.. automodule:: ariastrotools.ariastro_main
    :members:
    :show-inheritance:
    :undoc-members:
 
-ariastro.instrument module
+ariastrotools.instrument module
 --------------------------
 
-.. automodule:: ariastro.instrument
+.. automodule:: ariastrotools.instrument
    :members:
    :show-inheritance:
    :undoc-members:
 
-ariastro.logger module
+ariastrotools.logger module
 ----------------------
 
-.. automodule:: ariastro.logger
+.. automodule:: ariastrotools.logger
    :members:
    :show-inheritance:
    :undoc-members:
 
-ariastro.operations module
+ariastrotools.operations module
 --------------------------
 
-.. automodule:: ariastro.operations
+.. automodule:: ariastrotools.operations
    :members:
    :show-inheritance:
    :undoc-members:
 
-ariastro.handle_frame module
+ariastrotools.handle_frame module
 -----------------------------
 
-.. automodule:: ariastro.handle_frame
+.. automodule:: ariastrotools.handle_frame
    :members:
    :show-inheritance:
    :undoc-members:
 
-ariastro.setups module
+ariastrotools.setups module
 ----------------------
 
-.. automodule:: ariastro.setups
+.. automodule:: ariastrotools.setups
    :members:
    :show-inheritance:
    :undoc-members:
 
-ariastro.spectral\_utils module
+ariastrotools.spectral\_utils module
 -------------------------------
 
-.. automodule:: ariastro.spectral_utils
+.. automodule:: ariastrotools.spectral_utils
    :members:
    :show-inheritance:
    :undoc-members:
 
-ariastro.utils module
+ariastrotools.utils module
 ---------------------
 
-.. automodule:: ariastro.utils
+.. automodule:: ariastrotools.utils
    :members:
    :show-inheritance:
    :undoc-members:
@@ -71,7 +71,7 @@ ariastro.utils module
 Module contents
 ---------------
 
-.. automodule:: ariastro
+.. automodule:: ariastrotools
    :members:
    :show-inheritance:
    :undoc-members:
