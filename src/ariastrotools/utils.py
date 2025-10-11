@@ -6,10 +6,15 @@ def extract_data_header(hdu, ext=0):
     Function to open the fits file and
     extract the data and header.
     """
+    opened = False
+    if isinstance(hdu, str):
+        hdu = fits.open(hdu)
+        opened = False
     data = hdu[ext].data
     header = hdu[ext].header
     extname = hdu[ext].header.get("EXTNAME")
-
+    if opened:
+        hdu.close()
     return data, header, extname
 
 
