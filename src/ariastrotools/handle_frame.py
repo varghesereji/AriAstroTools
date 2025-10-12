@@ -18,6 +18,8 @@ from scipy.ndimage import filters
 
 from pathlib import Path
 from astropy.io import fits
+from scipy.ndimage import shift
+
 from .operations import ari_operations
 from .operations import combine_data
 from .spectral_utils import combine_spectra
@@ -487,4 +489,42 @@ def remove_cosmic_rays(input_fname,
             fits.ImageHDU(crmask.astype(int), name="CRMASK")
         )
         hdul.writeto(opfilename, overwrite=True)
+
+
+def shifting_frame(input_fname,
+                   opfilename,
+                   shifttoapply=np.array([0., 0.]),
+                   fluxext=[0],
+                   varext=None):
+    primary_hdu = fits.PrimaryHDU()
+    hdul = fits.HDUList([primary_hdu])
+    header = fits.getheader(input_fname, ext=0)
+    header['HISOTRY'] = "Shifted by {}".format(shifttoapply)
+    for index, ext in enumerate(fluxext):
+        inputimgdata = fits.getdata(input_fname, ext=int(ext))
+        shifted = shift(inputimgdata,
+                        shifttoapply,
+                        order=3)
+        if varext is not None:
+            var = fits.getdata(input_fname, ext=int(varext[index]))
+            shifted_var = shift(var,
+                                shifttoapply,
+                                order=3)
+        if int(ext) == 0:
+            hdul[0] = fits.PrimaryHDU(shifted, header=header)
+        else:
+            imagehdu = fits.ImageHDU(shifted, header=header,
+                                     name="FLUX")
+            hdul.append(imagehdu)
+        if varext is not None:
+            hdul.append(
+                fits.ImageHDU(shifted_var,
+                              header=fits.getheader(
+                                  input_fname, ext=int(varext[index])
+                                  ),
+                              name="VARIANCE"
+                              )
+                )
+        hdul.writeto(opfilename, overwrite=True)
+                              
 # End
