@@ -89,7 +89,8 @@ Combine
 '''
 
 
-def combine_data(dataarr, var=None, method='mean'):
+def combine_data(dataarr, var=None, method='mean',
+                 mask=None):
     """
     Combine multiple arrays along the first axis using a specified method.
 
@@ -135,19 +136,35 @@ def combine_data(dataarr, var=None, method='mean'):
         return comb_data, comb_var
     dataarr = np.array(dataarr)
     N = dataarr.shape[0]
-    # print(dataarr.shape)
-    if method == 'mean':
-        comb_data = np.nanmean(dataarr, axis=0)
-    elif method == 'median':
-        comb_data = np.nanmedian(dataarr, axis=0)
-    elif method == 'biweight':
-        comb_data = biweight_location(dataarr, axis=0)
+    if mask is not None:
+        mask_full = np.broadcast_to(mask, dataarr.shape)
+        dataarr_ma = np.ma.array(dataarr, mask=mask_full)
+        if method == 'mean':
+            comb_data = np.ma.nanmean(dataarr_ma, axis=0).filled(np.nan)
+        elif method == 'median':
+            comb_data = np.ma.nanmedian(dataarr_ma, axis=0).filled(np.nan)
+        elif method == 'biweight':
+            comb_data = biweight_location(dataarr_ma, axis=0).filled(np.nan)
+
+    else:
+        if method == 'mean':
+            comb_data = np.nanmean(dataarr, axis=0)
+        elif method == 'median':
+            comb_data = np.nanmedian(dataarr, axis=0)
+        elif method == 'biweight':
+            comb_data = biweight_location(dataarr, axis=0)
     # Propagating error.
     # Treating the error propagation
     # as mean for median also.
     if var is not None:
-        comb_var = np.sum(var, axis=0) / N**2
-        return comb_data, comb_var
+        if mask is None:
+            comb_var = np.sum(var, axis=0) / N**2
+            return comb_data, comb_var
+        else:
+            var_ma = np.ma.array(var, mask_full)
+            comb_var = np.ma.sum(var_ma, axis=0) / N**2
+            comb_var = comb_var.filled(np.nan)
+            return comb_data, comb_var
     return comb_data, None
 
 

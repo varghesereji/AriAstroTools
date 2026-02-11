@@ -150,6 +150,7 @@ def combine_process(files,
                     method='mean',
                     fluxext=[0],
                     varext=None,
+                    mask=None,
                     instrument=None
                     ):
     """
