@@ -1,0 +1,789 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
+        <link rel="prefetch" href="../_static/AriAstro_logo.png" as="image">
+
+    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+        <title>ariastrotools package - AriAstroTools documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">AriAstroTools  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/AriAstro_logo.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">AriAstroTools  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html#combine-frames">Combine Frames</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html#binary-operations">Binary Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../flowchart.html">Module Flowchart</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">API Reference</a><input aria-label="Toggle navigation of API Reference" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="operations.html">operations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="handle_frame.html">handle frame module</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/source/ariastro.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="ariastrotools-package">
+<h1>ariastrotools package<a class="headerlink" href="#ariastrotools-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="ariastrotools-ariastrotools-main-module">
+<h2>ariastrotools.ariastrotools_main module<a class="headerlink" href="#ariastrotools-ariastrotools-main-module" title="Link to this heading">¶</a></h2>
+</section>
+<section id="ariastrotools-instrument-module">
+<h2>ariastrotools.instrument module<a class="headerlink" href="#ariastrotools-instrument-module" title="Link to this heading">¶</a></h2>
+<dl class="py class" id="module-ariastrotools.instrument">
+<dt class="sig sig-object py" id="ariastrotools.instrument.Handle_NEID">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ariastrotools.instrument.</span></span><span class="sig-name descname"><span class="pre">Handle_NEID</span></span><a class="reference internal" href="../_modules/ariastrotools/instrument.html#Handle_NEID"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ariastrotools.instrument.Handle_NEID" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to handle NEID spectrograph FITS data.</p>
+<p>This class provides methods for reading NEID FITS files, applying
+barycentric corrections to the wavelength solution, and performing
+basic blaze correction on the extracted orders.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ariastrotools.instrument.Handle_NEID.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#ariastrotools.instrument.Handle_NEID.name" title="Link to this definition">¶</a></dt>
+<dd><p>Instrument identifier, set to “NEID”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">__init__():</span></span></dt>
+<dd><p>Initializes the NEID handler.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">getfull_data(fname):</span></span></dt>
+<dd><p>Reads all extensions from a FITS file and returns data and headers.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">barycorr(wl_array,</span> <span class="pre">header):</span></span></dt>
+<dd><p>Applies barycentric correction to the wavelength array using
+header keywords <cite>SSBZxxx</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">process_data(fname):</span></span></dt>
+<dd><p>Reads the FITS file, applies barycentric and blaze corrections,
+and returns corrected data and headers.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ariastrotools.instrument.Handle_NEID.barycorr">
+<span class="sig-name descname"><span class="pre">barycorr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wl_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ariastrotools/instrument.html#Handle_NEID.barycorr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ariastrotools.instrument.Handle_NEID.barycorr" title="Link to this definition">¶</a></dt>
+<dd><p>Apply barycentric correction to the wavelength array.</p>
+<p>For each spectral order, the barycentric correction factor is
+retrieved from the header keywords <code class="docutils literal notranslate"><span class="pre">SSBZxxx</span></code> (where xxx is the
+order number, zero-padded to 3 digits). The factor is then applied
+multiplicatively to the wavelength array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wl_array</strong> (<em>ndarray</em>) – 2D array of wavelength values (orders x pixels).</p></li>
+<li><p><strong>header</strong> (<em>astropy.io.fits.Header</em>) – FITS header containing the barycentric correction keywords.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>corr_wl_array</strong> (<em>ndarray</em>) – Wavelength array corrected for barycentric motion.</p></li>
+<li><p><strong>header</strong> (<em>astropy.io.fits.Header</em>) – Updated header with <code class="docutils literal notranslate"><span class="pre">SSBZxxx</span></code> values reset to zero.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ariastrotools.instrument.Handle_NEID.fits_extensions">
+<span class="sig-name descname"><span class="pre">fits_extensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ariastrotools/instrument.html#Handle_NEID.fits_extensions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ariastrotools.instrument.Handle_NEID.fits_extensions" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ariastrotools.instrument.Handle_NEID.getfull_data">
+<span class="sig-name descname"><span class="pre">getfull_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ariastrotools/instrument.html#Handle_NEID.getfull_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ariastrotools.instrument.Handle_NEID.getfull_data" title="Link to this definition">¶</a></dt>
+<dd><p>Extract all extensions from a NEID FITS file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fname</strong> (<em>str</em>) – Path to the FITS file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>datadict</strong> (<em>dict</em>) – Dictionary mapping extension keywords to numpy arrays
+containing the data.</p></li>
+<li><p><strong>headerdict</strong> (<em>dict</em>) – Dictionary mapping extension keywords to FITS headers.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">name</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'NEID'</span></span><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ariastrotools.instrument.Handle_NEID.process_data">
+<span class="sig-name descname"><span class="pre">process_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contnorm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ariastrotools/instrument.html#Handle_NEID.process_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ariastrotools.instrument.Handle_NEID.process_data" title="Link to this definition">¶</a></dt>
+<dd><p>Process a NEID FITS file: barycentric correction, blaze correction,
+and variance correction.</p>
+<p>This method:
+- Reads in the flux, variance, wavelength, blaze, and header data.
+- Applies barycentric correction to the wavelength arrays.
+- Replaces blaze arrays with ones (effectively removing blaze shape).
+- Corrects flux and variance for blaze.
+- Continuum normalization. (optional)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fname</strong> (<em>str</em>) – Path to the NEID FITS file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>datadict</strong> (<em>dict</em>) – Dictionary with corrected data arrays (flux, variance, blaze).</p></li>
+<li><p><strong>headerdict</strong> (<em>dict</em>) – Dictionary with updated FITS headers.</p></li>
+<li><p><strong>contnorm</strong> (<em>bool</em>) – Do continuum division with the function continuum_normalize.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ariastrotools.instrument.Handle_NEID.req_qtys">
+<span class="sig-name descname"><span class="pre">req_qtys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ariastrotools/instrument.html#Handle_NEID.req_qtys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ariastrotools.instrument.Handle_NEID.req_qtys" title="Link to this definition">¶</a></dt>
+<dd><p>Dictonary format:
+{Name of extension: List of keys from that extension}</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="ariastrotools-logger-module">
+<h2>ariastrotools.logger module<a class="headerlink" href="#ariastrotools-logger-module" title="Link to this heading">¶</a></h2>
+</section>
+<section id="ariastrotools-operations-module">
+<span id="module-ariastrotools.logger"></span><h2>ariastrotools.operations module<a class="headerlink" href="#ariastrotools-operations-module" title="Link to this heading">¶</a></h2>
+<dl class="py function" id="module-ariastrotools.operations">
+<dt class="sig sig-object py" id="ariastrotools.operations.ari_operations">
+<span class="sig-prename descclassname"><span class="pre">ariastrotools.operations.</span></span><span class="sig-name descname"><span class="pre">ari_operations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arr2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_arr1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_arr2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'+'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ariastrotools/operations.html#ari_operations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ariastrotools.operations.ari_operations" title="Link to this definition">¶</a></dt>
+<dd><p>Perform element-wise arithmetic operations on two input arrays with
+optional variance propagation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr1</strong> (<em>numpy.ndarray</em>) – First input array.</p></li>
+<li><p><strong>arr2</strong> (<em>numpy.ndarray</em>) – Second input array, must be broadcastable to the shape of <cite>arr1</cite>.</p></li>
+<li><p><strong>var_arr1</strong> (<em>numpy.ndarray</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Variance (uncertainty) array corresponding to <cite>arr1</cite>. Default is None.</p></li>
+<li><p><strong>var_arr2</strong> (<em>numpy.ndarray</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Variance (uncertainty) array corresponding to <cite>arr2</cite>. Default is None.</p></li>
+<li><p><strong>operation</strong> (<em>str</em><em>, </em><em>optional</em>) – Arithmetic operation to apply (default is ‘sum’).
+Supported values:
+- ‘+’  : element-wise addition
+- ‘-’ : element-wise subtraction (<cite>arr1 - arr2</cite>)
+- ‘*’ : element-wise multiplication
+- ‘/’  : element-wise division (<cite>arr1 / arr2</cite>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>numpy.ndarray or tuple of numpy.ndarray</em> – If <cite>var_arr1</cite> and <cite>var_arr2</cite> are not provided, returns the result of
+element-wise operation on <cite>arr1</cite> and <cite>arr2</cite>.
+If both variances are provided, returns the propagated variance array
+computed according to the operation:
+- For ‘+’ and ‘-’: variances are added.
+- For ‘*’ and ‘/’: variance propagated as</p></li>
+<li><p><em>product.</em></p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ZeroDivisionError</strong> – When division by zero occurs in ‘div’ operation.</p></li>
+<li><p><strong>ValueError</strong> – If <cite>operation</cite> is not one of the supported strings.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ari_operations</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">)</span>
+<span class="go">array([5., 7., 9.])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">var_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">var_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ari_operations</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">var_a</span><span class="p">,</span> <span class="n">var_b</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">)</span>
+<span class="go">array([0.3, 0.3, 0.3])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ariastrotools.operations.combine_data">
+<span class="sig-prename descclassname"><span class="pre">ariastrotools.operations.</span></span><span class="sig-name descname"><span class="pre">combine_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataarr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ariastrotools/operations.html#combine_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ariastrotools.operations.combine_data" title="Link to this definition">¶</a></dt>
+<dd><p>Combine multiple arrays along the first axis using a specified method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataarr</strong> (<em>array_like</em>) – Input data array of shape (N, …), where <cite>N</cite> is the number of
+individual datasets to combine. The combination is performed
+along axis=0.</p></li>
+<li><p><strong>var</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Variance array of the same shape as <cite>dataarr</cite>. If provided,
+error propagation is performed assuming independent errors,
+yielding the variance of the combined data. Default is None.</p></li>
+<li><p><strong>method</strong> (<em>{'mean'</em><em>, </em><em>'median'</em><em>, </em><em>'biweight'</em><em>, </em><em>'weightedavg'}</em><em>, </em><em>optional</em>) – <p>Method used for combining the data:</p>
+<ul>
+<li><p>’mean’ : arithmetic mean ignoring NaNs.</p></li>
+<li><p>’median’ : median ignoring NaNs.</p></li>
+<li><p>’biweight’ : robust biweight location (from <cite>astropy.stats</cite>).</p></li>
+</ul>
+<p>Default is ‘mean’.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>comb_data</strong> (<em>ndarray</em>) – Combined data array, same shape as a single input array
+(i.e., shape of <cite>dataarr[0]</cite>).</p></li>
+<li><p><strong>comb_var</strong> (<em>ndarray, optional</em>) – Combined variance array of the same shape as <cite>comb_data</cite>.
+Returned only if <cite>var</cite> is provided.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>NaN values in <cite>dataarr</cite> are ignored during combination.</p></li>
+<li><p>Variance is propagated as if the combination method were the mean,
+even if <cite>median</cite> or <cite>biweight</cite> are chosen. This provides an
+approximate uncertainty estimate.</p></li>
+<li><p>The biweight method is less sensitive to outliers than the mean
+or median.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ariastrotools.operations.combine_data_full">
+<span class="sig-prename descclassname"><span class="pre">ariastrotools.operations.</span></span><span class="sig-name descname"><span class="pre">combine_data_full</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datadict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">3]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[4,</span> <span class="pre">5,</span> <span class="pre">6]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ariastrotools/operations.html#combine_data_full"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ariastrotools.operations.combine_data_full" title="Link to this definition">¶</a></dt>
+<dd><p>Combine flux and variance data from multiple FITS files into a single
+dictionary.</p>
+<p>This function takes a dictionary of arrays (typically produced from
+reading multiple FITS files), selects specific keys for flux and
+variance, and combines them using a specified method (e.g. mean,
+median, or biweight). Non-flux/variance entries are copied from the
+first element of the corresponding arrays.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>datadict</strong> (<em>dict</em>) – Dictionary containing data arrays. Each key corresponds to a FITS
+extension or metadata. Flux and variance arrays are stacked along
+the first axis (i.e., shape <code class="docutils literal notranslate"><span class="pre">(n_files,</span> <span class="pre">n_points,</span> <span class="pre">...)</span></code>).</p></li>
+<li><p><strong>dataext</strong> (<em>list</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Indices of <code class="docutils literal notranslate"><span class="pre">datadict.keys()</span></code> that correspond to flux data.
+Default is <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">3]</span></code>.</p></li>
+<li><p><strong>varext</strong> (<em>list</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Indices of <code class="docutils literal notranslate"><span class="pre">datadict.keys()</span></code> that correspond to variance data.
+Default is <code class="docutils literal notranslate"><span class="pre">[4,</span> <span class="pre">5,</span> <span class="pre">6]</span></code>.</p></li>
+<li><p><strong>method</strong> (<em>{'mean'</em><em>, </em><em>'median'</em><em>, </em><em>'biweight'}</em><em>, </em><em>optional</em>) – <p>Method used to combine the fluxes and variances.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'mean'</span></code> : compute the mean across input files</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'median'</span></code> : compute the median across input files</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'biweight'</span></code> : compute the biweight across input files</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p><strong>comb_dicts</strong> – New dictionary with combined flux and variance arrays.</p>
+<ul class="simple">
+<li><p>Keys in <code class="docutils literal notranslate"><span class="pre">flux_keys</span></code> and <code class="docutils literal notranslate"><span class="pre">var_keys</span></code> contain the combined
+arrays.</p></li>
+<li><p>Other keys are reduced to the first element of their array.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This function assumes dictionary key order matches <code class="docutils literal notranslate"><span class="pre">dataext</span></code> and
+<code class="docutils literal notranslate"><span class="pre">varext</span></code>. Since Python 3.7, dictionary order is guaranteed to be
+insertion order.</p></li>
+<li><p>Non-flux/variance arrays (e.g., wavelength grids, headers) are taken
+from the first FITS file. If you want to preserve the full stack,
+you should modify the loop that reduces them to index <code class="docutils literal notranslate"><span class="pre">[0]</span></code>.</p></li>
+<li><p>To prevent modifying the original input, the function creates a
+shallow copy of <code class="docutils literal notranslate"><span class="pre">datadict</span></code>. Arrays themselves are <em>not</em>
+deep-copied.</p></li>
+</ul>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">datadict</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">&quot;KEY0&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;header1&quot;</span><span class="p">,</span> <span class="s2">&quot;header2&quot;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s2">&quot;SCIFLUX&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]]),</span>
+<span class="gp">... </span>    <span class="s2">&quot;VAR&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]]),</span>
+<span class="gp">... </span>    <span class="s2">&quot;WAVELENGTH&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">500</span><span class="p">,</span> <span class="mi">600</span><span class="p">],</span> <span class="p">[</span><span class="mi">700</span><span class="p">,</span> <span class="mi">800</span><span class="p">]])</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">combine_data_full</span><span class="p">(</span><span class="n">datadict</span><span class="p">,</span> <span class="n">dataext</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">varext</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+<span class="gp">... </span>                           <span class="n">method</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;SCIFLUX&quot;</span><span class="p">]</span>
+<span class="go">array([2.5, 3.5, 4.5])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;VAR&quot;</span><span class="p">]</span>
+<span class="go">array([1.5, 1.5, 1.5])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;KEY0&quot;</span><span class="p">]</span>
+<span class="go">&#39;header1&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ariastrotools.operations.weighted_mean_and_variance">
+<span class="sig-prename descclassname"><span class="pre">ariastrotools.operations.</span></span><span class="sig-name descname"><span class="pre">weighted_mean_and_variance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variances</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ariastrotools/operations.html#weighted_mean_and_variance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ariastrotools.operations.weighted_mean_and_variance" title="Link to this definition">¶</a></dt>
+<dd><p>Compute the weighted mean and variance of the mean,
+given measurements and their variances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<em>array-like</em>) – Measured values (x_i)</p></li>
+<li><p><strong>variances</strong> (<em>array-like</em>) – Variances of the measurements.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>mean</strong> (<em>float</em>) – Weighted mean.</p></li>
+<li><p><strong>variance_of_mean</strong> (<em>float</em>) – Variance of the weighted mean</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError</strong> – If <cite>variances</cite> is None.</p></li>
+<li><p><strong>TypeError</strong> – If <cite>values</cite> or <cite>variances</cite> are not array-like.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The weighted mean is computed as:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\bar{x} = \frac{\sum_i w_i x_i}{\sum_i w_i}, \quad
+w_i = \frac{1}{\sigma_i^2}\]</div>
+</div>
+<p>The variance of the weighted mean is:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\sigma_{\bar{x}}^2 = \frac{1}{\sum_i w_i}\]</div>
+</div>
+</dd></dl>
+
+</section>
+<section id="ariastrotools-setups-module">
+<h2>ariastrotools.setups module<a class="headerlink" href="#ariastrotools-setups-module" title="Link to this heading">¶</a></h2>
+</section>
+<section id="ariastrotools-spectral-utils-module">
+<h2>ariastrotools.spectral_utils module<a class="headerlink" href="#ariastrotools-spectral-utils-module" title="Link to this heading">¶</a></h2>
+</section>
+<section id="ariastrotools-utils-module">
+<h2>ariastrotools.utils module<a class="headerlink" href="#ariastrotools-utils-module" title="Link to this heading">¶</a></h2>
+<dl class="py function" id="module-ariastrotools.utils">
+<dt class="sig sig-object py" id="ariastrotools.utils.create_fits">
+<span class="sig-prename descclassname"><span class="pre">ariastrotools.utils.</span></span><span class="sig-name descname"><span class="pre">create_fits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datadict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Avg_neid_data.fits'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ariastrotools/utils.html#create_fits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ariastrotools.utils.create_fits" title="Link to this definition">¶</a></dt>
+<dd><p>Create a multi-extension FITS file from a dictionary of data arrays and
+headers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>datadict</strong> (<em>dict</em>) – <p>Dictionary mapping extension names (str) to their corresponding data.
+- The first entry in <cite>datadict</cite> is treated as the <em>primary HDU</em>.
+- Other entries are written as either <cite>ImageHDU</cite> (for numeric arrays)</p>
+<blockquote>
+<div><p>or <cite>BinTableHDU</cite> (for tabular/structured arrays, e.g. ‘ACTIVITY’).</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>header_dict</strong> (<em>dict</em>) – Dictionary mapping extension names (str) to FITS header information.
+Each value must be compatible with <cite>astropy.io.fits.Header</cite>.</p></li>
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the FITS file to create. Default is <cite>“Avg_neid_data.fits”</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The function automatically selects <cite>BinTableHDU</cite> for extensions
+listed in <cite>tablehdu</cite> (currently only <cite>‘ACTIVITY’</cite>).</p></li>
+<li><p>All other extensions are written as <cite>ImageHDU</cite>.</p></li>
+<li><p>Existing files with the same name are overwritten.</p></li>
+</ul>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">datadict</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">&quot;PRIMARY&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)),</span>        <span class="c1"># primary HDU data</span>
+<span class="gp">... </span>    <span class="s2">&quot;SCIENCE&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)),</span>  <span class="c1"># image extension</span>
+<span class="gp">... </span>    <span class="s2">&quot;ACTIVITY&quot;</span><span class="p">:</span> <span class="n">structured_array</span>            <span class="c1"># table extension</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">header_dict</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">&quot;PRIMARY&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;OBSERVER&quot;</span><span class="p">:</span> <span class="s2">&quot;Varghese&quot;</span><span class="p">},</span>
+<span class="gp">... </span>    <span class="s2">&quot;SCIENCE&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;EXTNAME&quot;</span><span class="p">:</span> <span class="s2">&quot;SCIENCE&quot;</span><span class="p">},</span>
+<span class="gp">... </span>    <span class="s2">&quot;ACTIVITY&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;COMMENT&quot;</span><span class="p">:</span> <span class="s2">&quot;Activity indices&quot;</span><span class="p">}</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">create_fits</span><span class="p">(</span><span class="n">datadict</span><span class="p">,</span> <span class="n">header_dict</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;output.fits&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will produce a FITS file with:
+- A primary HDU containing the first dataset.
+- An image extension for “SCIENCE”.
+- A binary table extension for “ACTIVITY”.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ariastrotools.utils.extract_allexts">
+<span class="sig-prename descclassname"><span class="pre">ariastrotools.utils.</span></span><span class="sig-name descname"><span class="pre">extract_allexts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ariastrotools/utils.html#extract_allexts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ariastrotools.utils.extract_allexts" title="Link to this definition">¶</a></dt>
+<dd><p>Extract all extensions from a FITS file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fname</strong> (<em>str</em>) – Path to the FITS file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>datadict</strong> (<em>dict</em>) – Dictionary mapping extension keywords to numpy arrays
+containing the data.</p></li>
+<li><p><strong>headerdict</strong> (<em>dict</em>) – Dictionary mapping extension keywords to FITS headers.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ariastrotools.utils.extract_data_header">
+<span class="sig-prename descclassname"><span class="pre">ariastrotools.utils.</span></span><span class="sig-name descname"><span class="pre">extract_data_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hdu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ariastrotools/utils.html#extract_data_header"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ariastrotools.utils.extract_data_header" title="Link to this definition">¶</a></dt>
+<dd><p>Function to open the fits file and
+extract the data and header.</p>
+</dd></dl>
+
+</section>
+<section id="ariastrotools-handle-frame-module">
+<h2>ariastrotools.handle_frame module<a class="headerlink" href="#ariastrotools-handle-frame-module" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, Varghese Reji
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">ariastrotools package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#ariastrotools-ariastrotools-main-module">ariastrotools.ariastrotools_main module</a></li>
+<li><a class="reference internal" href="#ariastrotools-instrument-module">ariastrotools.instrument module</a><ul>
+<li><a class="reference internal" href="#ariastrotools.instrument.Handle_NEID"><code class="docutils literal notranslate"><span class="pre">Handle_NEID</span></code></a><ul>
+<li><a class="reference internal" href="#ariastrotools.instrument.Handle_NEID.name"><code class="docutils literal notranslate"><span class="pre">Handle_NEID.name</span></code></a></li>
+<li><a class="reference internal" href="#ariastrotools.instrument.Handle_NEID.barycorr"><code class="docutils literal notranslate"><span class="pre">Handle_NEID.barycorr()</span></code></a></li>
+<li><a class="reference internal" href="#ariastrotools.instrument.Handle_NEID.fits_extensions"><code class="docutils literal notranslate"><span class="pre">Handle_NEID.fits_extensions()</span></code></a></li>
+<li><a class="reference internal" href="#ariastrotools.instrument.Handle_NEID.getfull_data"><code class="docutils literal notranslate"><span class="pre">Handle_NEID.getfull_data()</span></code></a></li>
+<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">Handle_NEID.name</span></code></a></li>
+<li><a class="reference internal" href="#ariastrotools.instrument.Handle_NEID.process_data"><code class="docutils literal notranslate"><span class="pre">Handle_NEID.process_data()</span></code></a></li>
+<li><a class="reference internal" href="#ariastrotools.instrument.Handle_NEID.req_qtys"><code class="docutils literal notranslate"><span class="pre">Handle_NEID.req_qtys()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ariastrotools-logger-module">ariastrotools.logger module</a></li>
+<li><a class="reference internal" href="#ariastrotools-operations-module">ariastrotools.operations module</a><ul>
+<li><a class="reference internal" href="#ariastrotools.operations.ari_operations"><code class="docutils literal notranslate"><span class="pre">ari_operations()</span></code></a></li>
+<li><a class="reference internal" href="#ariastrotools.operations.combine_data"><code class="docutils literal notranslate"><span class="pre">combine_data()</span></code></a></li>
+<li><a class="reference internal" href="#ariastrotools.operations.combine_data_full"><code class="docutils literal notranslate"><span class="pre">combine_data_full()</span></code></a></li>
+<li><a class="reference internal" href="#ariastrotools.operations.weighted_mean_and_variance"><code class="docutils literal notranslate"><span class="pre">weighted_mean_and_variance()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ariastrotools-setups-module">ariastrotools.setups module</a></li>
+<li><a class="reference internal" href="#ariastrotools-spectral-utils-module">ariastrotools.spectral_utils module</a></li>
+<li><a class="reference internal" href="#ariastrotools-utils-module">ariastrotools.utils module</a><ul>
+<li><a class="reference internal" href="#ariastrotools.utils.create_fits"><code class="docutils literal notranslate"><span class="pre">create_fits()</span></code></a></li>
+<li><a class="reference internal" href="#ariastrotools.utils.extract_allexts"><code class="docutils literal notranslate"><span class="pre">extract_allexts()</span></code></a></li>
+<li><a class="reference internal" href="#ariastrotools.utils.extract_data_header"><code class="docutils literal notranslate"><span class="pre">extract_data_header()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ariastrotools-handle-frame-module">ariastrotools.handle_frame module</a></li>
+<li><a class="reference internal" href="#module-contents">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    </body>
+</html>
