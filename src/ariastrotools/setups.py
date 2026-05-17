@@ -16,6 +16,8 @@ def read_args():
                         help="Extensions of variance")
     parent.add_argument("--wl", nargs="+", default=None,
                         help="Extensions of wavelength")
+    parent.add_argument("--mask", nargs="+", default=None,
+                        help="Bad pixel mask if available")
 
     parser = argparse.ArgumentParser(description="Input data to combine")
 

@@ -54,6 +54,7 @@ def main():
                             method=args.method,
                             fluxext=args.flux,
                             varext=args.var,
+                            mask=args.mask,
                             instrument=args.instrument
                             )
         else:
