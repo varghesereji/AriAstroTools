@@ -25,6 +25,52 @@ from .operations import combine_data
 from .spectral_utils import combine_spectra
 
 
+def masking_frame(frame, mask):
+    """
+    Apply a bad-pixel mask to a data frame.
+
+    Pixels where the mask is not equal to 1 are replaced with NaN.
+
+    Parameters
+    ----------
+    frame : numpy.ndarray
+        Input 2D data array to be masked.
+
+    mask : numpy.ndarray, str, or list
+        Mask information. Supported inputs are:
+
+        - numpy.ndarray :
+          Boolean/integer mask array with the same shape as ``frame``.
+          Pixels with value 1 are retained.
+
+        - str :
+          Path to a ``.npy`` mask file that will be loaded using
+          ``numpy.load``.
+
+        - list :
+          If a list is provided, only the first element is used.
+          This is useful when arguments are parsed using
+          ``argparse`` with ``nargs='+'``.
+
+    Returns
+    -------
+    numpy.ndarray
+        Masked frame where invalid pixels are replaced by ``NaN``.
+
+    Notes
+    -----
+    The masking is performed in-place on the input ``frame`` array.
+    """
+
+    if isinstance(mask, list):
+        mask = mask[0]
+    if isinstance(mask, str):
+        mask = np.load(mask)
+    mask_bool = mask == 1
+    frame[~mask_bool] = np.nan
+    return frame
+
+
 def operate_process(ip1, ip2,
                     opfilename,
                     operation='+',
@@ -274,6 +320,9 @@ def combine_process(files,
                                             method=method)
         to_history = [Path(i).name for i in files_list]
         header["HISTORY"] = method + str(to_history)
+        if mask is not None:
+            masking_frame(result, mask)
+            header["HISTORY"] = "Mask used: {}".format(mask)
         if int(ext) == 0:
             hdul[0] = fits.PrimaryHDU(result, header=header)
         else:
