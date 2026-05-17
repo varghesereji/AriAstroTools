@@ -64,7 +64,7 @@ def masking_frame(frame, mask):
 
     if isinstance(mask, list):
         mask = mask[0]
-    if isinstance(mask, str):
+    if isinstance(mask, str) or isinstance(mask, Path):
         mask = np.load(mask)
     mask_bool = mask == 1
     frame[~mask_bool] = np.nan
