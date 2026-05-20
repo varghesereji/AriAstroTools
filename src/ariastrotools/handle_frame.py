@@ -167,9 +167,6 @@ def operate_process(ip1, ip2,
             data2 = hdul2[ext].data
             if varext is None:
                 var2 = None
-            else:
-                var2 = hdul2[int(varext[index])].data
-            hdul2.close()
         result, var = ari_operations(data1, data2,
                                      var1, var2,
                                      operation=operation)
