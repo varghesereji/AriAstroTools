@@ -162,7 +162,7 @@ def operate_process(ip1, ip2,
             data2 = ip2
             var2 = 0
         else:
-<<<<<<< Updated upstream
+
             hdul2 = fits.open(ip2)
             data2 = hdul2[ext].data
             if varext is None:
@@ -170,22 +170,6 @@ def operate_process(ip1, ip2,
             else:
                 var2 = hdul2[int(varext[index])].data
             hdul2.close()
-=======
-            if ip2[-5:] == ".fits":
-                hdul2 = fits.open(ip2)
-                data2 = hdul2[ext].data
-                if varext is None:
-                    var2 = None
-                else:
-                    var2 = hdul2[int(varext[index])].data
-                hdul2.close()
-            elif ip2[-4:] == ".npy":
-                data2 = np.load(ip2)
-                if varext is None:
-                    var2 = None
-                else:
-                    var2 = 0
->>>>>>> Stashed changes
         result, var = ari_operations(data1, data2,
                                      var1, var2,
                                      operation=operation)
