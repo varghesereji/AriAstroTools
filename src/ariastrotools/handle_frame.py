@@ -142,12 +142,12 @@ def operate_process(ip1, ip2,
                         fluxext=[1, 2], varext=[3, 4])
     """
 
-    primary_hdu = fits.PrimaryHDU()
-    hdul = fits.HDUList([primary_hdu])
+    # primary_hdu = fits.PrimaryHDU()
+    hdul1 = fits.open(ip1)
+    hdul = fits.HDUList([hdu.copy() for hdu in hdul1])
     for index, ext in enumerate(fluxext):
         ext = int(ext)
-        header = fits.getheader(ip1, ext=ext)
-        hdul1 = fits.open(ip1)
+        header = hdul[ext].header
         data1 = hdul1[ext].data
         header['HISTORY'] = '{} {} {}'.format(Path(ip1).name,
                                               operation,
@@ -162,35 +162,21 @@ def operate_process(ip1, ip2,
             data2 = ip2
             var2 = 0
         else:
-            if ip2[-5:] == ".fits":
-                hdul2 = fits.open(ip2)
-                data2 = hdul2[ext].data
-                if varext is None:
-                    var2 = None
-                else:
-                    var2 = hdul2[int(varext[index])].data
-                hdul2.close()
-            elif ip2[-4:] == ".npy":
-                data2 = np.load(ip2)
+
+            hdul2 = fits.open(ip2)
+            data2 = hdul2[ext].data
+            if varext is None:
                 var2 = None
         result, var = ari_operations(data1, data2,
                                      var1, var2,
                                      operation=operation)
-        if int(ext) == 0:
-            hdul[0] = fits.PrimaryHDU(result, header=header)
-        else:
-            imagehdu = fits.ImageHDU(result, header=header,
-                                     name="FLUX")
-            hdul.append(imagehdu)
+        hdul[ext].data = result
+        hdul[ext].header = header
         if varext is not None:
-            hdul.append(
-                fits.ImageHDU(var,
-                              header=fits.getheader(
-                                  ip1, ext=int(varext[index])
-                              ),
-                              name="VARIANCE"
-                              )
-            )
+            var_ext = int(varext[index])
+            hdul[var_ext].data = var
+
+    hdul1.close()
     hdul.writeto(opfilename, overwrite=True)
 
 
