@@ -162,13 +162,17 @@ def operate_process(ip1, ip2,
             data2 = ip2
             var2 = 0
         else:
-            hdul2 = fits.open(ip2)
-            data2 = hdul2[ext].data
-            if varext is None:
+            if ip2[-5:] == ".fits":
+                hdul2 = fits.open(ip2)
+                data2 = hdul2[ext].data
+                if varext is None:
+                    var2 = None
+                else:
+                    var2 = hdul2[int(varext[index])].data
+                hdul2.close()
+            elif ip2[-4:] == ".npy":
+                data2 = np.load(ip2)
                 var2 = None
-            else:
-                var2 = hdul2[int(varext[index])].data
-            hdul2.close()
         result, var = ari_operations(data1, data2,
                                      var1, var2,
                                      operation=operation)
