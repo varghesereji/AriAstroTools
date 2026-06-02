@@ -326,6 +326,7 @@ def combine_process(files,
         if mask is not None:
             result = masking_frame(result, mask)
             header["HISTORY"] = "Mask used: {}".format(mask)
+            header["HISTORY"] = "Interpolated bad pixels"
         if int(ext) == 0:
             hdul[0] = fits.PrimaryHDU(result, header=header)
         else:
