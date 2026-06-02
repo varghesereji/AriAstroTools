@@ -30,21 +30,23 @@ def masking_frame(frame, mask, variance=None, method='interpolate'):
     """
     Apply a bad-pixel mask to a data frame.
 
-    Pixels where the mask is not equal to 1 are replaced with NaN.
+    Pixels where the mask is not equal to 1 are either replaced with
+    NaN values or interpolated from neighboring pixels, depending on
+    the selected method.
 
     Parameters
     ----------
     frame : numpy.ndarray
-        Input 2D data array to be masked.
+        Input 2D data array.
 
-    mask : numpy.ndarray, str, or list
+    mask : numpy.ndarray, str, pathlib.Path, or list
         Mask information. Supported inputs are:
 
         - numpy.ndarray :
           Boolean/integer mask array with the same shape as ``frame``.
-          Pixels with value 1 are retained.
+          Pixels with value 1 are considered valid.
 
-        - str :
+        - str or pathlib.Path :
           Path to a ``.npy`` mask file that will be loaded using
           ``numpy.load``.
 
@@ -53,14 +55,42 @@ def masking_frame(frame, mask, variance=None, method='interpolate'):
           This is useful when arguments are parsed using
           ``argparse`` with ``nargs='+'``.
 
+    variance : numpy.ndarray, optional
+        Variance array corresponding to ``frame``. If provided,
+        variances of masked pixels are multiplied by 1000 after
+        masking/interpolation to reflect their reduced reliability.
+
+    method : {'nan', 'interpolate'}, optional
+        Method used to handle masked pixels.
+
+        - ``'nan'`` :
+          Replace masked pixels with ``NaN`` values.
+
+        - ``'interpolate'`` :
+          Fill masked pixels using biharmonic inpainting from
+          neighboring valid pixels.
+
+        Default is ``'interpolate'``.
+
     Returns
     -------
-    numpy.ndarray
-        Masked frame where invalid pixels are replaced by ``NaN``.
+    numpy.ndarray or tuple
+        If ``variance`` is not provided, returns the processed frame.
+
+        If ``variance`` is provided, returns ``(frame, variance)``,
+        where the variance of masked pixels has been increased.
 
     Notes
     -----
-    The masking is performed in-place on the input ``frame`` array.
+    For ``method='nan'``, the input ``frame`` is modified in place.
+
+    For ``method='interpolate'``, a new array is returned by the
+    interpolation routine.
+
+    Interpolated pixels should be treated with caution, particularly
+    for large masked regions. When a variance map is supplied, the
+    variance of masked pixels is increased to reduce their influence
+    in subsequent weighted analyses.
     """
 
     if isinstance(mask, list):
