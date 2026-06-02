@@ -326,7 +326,7 @@ def combine_process(files,
             hdul.append(imagehdu)
         if varext is not None:
             hdul.append(
-                fits.ImageHDU(var,
+                fits.ImageHDU(variance,
                               header=fits.getheader(
                                   files_list[0], ext=int(varext[index])
                                   ),
