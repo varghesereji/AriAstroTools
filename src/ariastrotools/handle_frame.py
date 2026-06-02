@@ -15,6 +15,7 @@ Functions:
 import numpy as np
 import astroscrappy
 from scipy.ndimage import filters
+from skimage.restoration import inpaint
 
 from pathlib import Path
 from astropy.io import fits
@@ -67,9 +68,14 @@ def masking_frame(frame, mask, method='interpolate'):
     if isinstance(mask, str) or isinstance(mask, Path):
         mask = np.load(mask)
     mask_bool = mask == 1
+
     if method == 'nan':
         frame[~mask_bool] = np.nan
 
+    elif method == 'interpolate':
+        frame = inpaint.inpaint_biharmonic(
+            frame,
+            ~mask_bool)
     return frame
 
 
