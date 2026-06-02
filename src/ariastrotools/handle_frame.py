@@ -324,7 +324,7 @@ def combine_process(files,
         to_history = [Path(i).name for i in files_list]
         header["HISTORY"] = method + str(to_history)
         if mask is not None:
-            masking_frame(result, mask)
+            result = masking_frame(result, mask)
             header["HISTORY"] = "Mask used: {}".format(mask)
         if int(ext) == 0:
             hdul[0] = fits.PrimaryHDU(result, header=header)
