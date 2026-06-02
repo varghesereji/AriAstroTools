@@ -25,7 +25,7 @@ from .operations import combine_data
 from .spectral_utils import combine_spectra
 
 
-def masking_frame(frame, mask):
+def masking_frame(frame, mask, method='interpolate'):
     """
     Apply a bad-pixel mask to a data frame.
 
@@ -67,7 +67,9 @@ def masking_frame(frame, mask):
     if isinstance(mask, str) or isinstance(mask, Path):
         mask = np.load(mask)
     mask_bool = mask == 1
-    frame[~mask_bool] = np.nan
+    if method == 'nan':
+        frame[~mask_bool] = np.nan
+
     return frame
 
 
