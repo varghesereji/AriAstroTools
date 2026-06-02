@@ -26,7 +26,7 @@ from .operations import combine_data
 from .spectral_utils import combine_spectra
 
 
-def masking_frame(frame, mask, method='interpolate'):
+def masking_frame(frame, mask, variance=None, method='interpolate'):
     """
     Apply a bad-pixel mask to a data frame.
 
@@ -76,6 +76,9 @@ def masking_frame(frame, mask, method='interpolate'):
         frame = inpaint.inpaint_biharmonic(
             frame,
             ~mask_bool)
+    if variance is not None:
+        variance[~mask_bool] = 1000 * variance[~mask_bool]
+        return frame, variance
     return frame
 
 
@@ -324,7 +327,12 @@ def combine_process(files,
         to_history = [Path(i).name for i in files_list]
         header["HISTORY"] = method + str(to_history)
         if mask is not None:
-            result = masking_frame(result, mask)
+            if varext is None:
+                result = masking_frame(result, mask)
+            else:
+                result, variance = masking_frame(result,
+                                                 mask,
+                                                 variance)
             header["HISTORY"] = "Mask used: {}".format(mask)
             header["HISTORY"] = "Interpolated bad pixels"
         if int(ext) == 0:
