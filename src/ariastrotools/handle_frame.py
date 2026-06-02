@@ -15,6 +15,7 @@ Functions:
 import numpy as np
 import astroscrappy
 from scipy.ndimage import filters
+from skimage.restoration import inpaint
 
 from pathlib import Path
 from astropy.io import fits
@@ -25,25 +26,27 @@ from .operations import combine_data
 from .spectral_utils import combine_spectra
 
 
-def masking_frame(frame, mask):
+def masking_frame(frame, mask, variance=None, method='interpolate'):
     """
     Apply a bad-pixel mask to a data frame.
 
-    Pixels where the mask is not equal to 1 are replaced with NaN.
+    Pixels where the mask is not equal to 1 are either replaced with
+    NaN values or interpolated from neighboring pixels, depending on
+    the selected method.
 
     Parameters
     ----------
     frame : numpy.ndarray
-        Input 2D data array to be masked.
+        Input 2D data array.
 
-    mask : numpy.ndarray, str, or list
+    mask : numpy.ndarray, str, pathlib.Path, or list
         Mask information. Supported inputs are:
 
         - numpy.ndarray :
           Boolean/integer mask array with the same shape as ``frame``.
-          Pixels with value 1 are retained.
+          Pixels with value 1 are considered valid.
 
-        - str :
+        - str or pathlib.Path :
           Path to a ``.npy`` mask file that will be loaded using
           ``numpy.load``.
 
@@ -52,14 +55,42 @@ def masking_frame(frame, mask):
           This is useful when arguments are parsed using
           ``argparse`` with ``nargs='+'``.
 
+    variance : numpy.ndarray, optional
+        Variance array corresponding to ``frame``. If provided,
+        variances of masked pixels are multiplied by 1000 after
+        masking/interpolation to reflect their reduced reliability.
+
+    method : {'nan', 'interpolate'}, optional
+        Method used to handle masked pixels.
+
+        - ``'nan'`` :
+          Replace masked pixels with ``NaN`` values.
+
+        - ``'interpolate'`` :
+          Fill masked pixels using biharmonic inpainting from
+          neighboring valid pixels.
+
+        Default is ``'interpolate'``.
+
     Returns
     -------
-    numpy.ndarray
-        Masked frame where invalid pixels are replaced by ``NaN``.
+    numpy.ndarray or tuple
+        If ``variance`` is not provided, returns the processed frame.
+
+        If ``variance`` is provided, returns ``(frame, variance)``,
+        where the variance of masked pixels has been increased.
 
     Notes
     -----
-    The masking is performed in-place on the input ``frame`` array.
+    For ``method='nan'``, the input ``frame`` is modified in place.
+
+    For ``method='interpolate'``, a new array is returned by the
+    interpolation routine.
+
+    Interpolated pixels should be treated with caution, particularly
+    for large masked regions. When a variance map is supplied, the
+    variance of masked pixels is increased to reduce their influence
+    in subsequent weighted analyses.
     """
 
     if isinstance(mask, list):
@@ -67,7 +98,17 @@ def masking_frame(frame, mask):
     if isinstance(mask, str) or isinstance(mask, Path):
         mask = np.load(mask)
     mask_bool = mask == 1
-    frame[~mask_bool] = np.nan
+
+    if method == 'nan':
+        frame[~mask_bool] = np.nan
+
+    elif method == 'interpolate':
+        frame = inpaint.inpaint_biharmonic(
+            frame,
+            ~mask_bool)
+    if variance is not None:
+        variance[~mask_bool] = 1000 * variance[~mask_bool]
+        return frame, variance
     return frame
 
 
@@ -316,8 +357,14 @@ def combine_process(files,
         to_history = [Path(i).name for i in files_list]
         header["HISTORY"] = method + str(to_history)
         if mask is not None:
-            masking_frame(result, mask)
+            if varext is None:
+                result = masking_frame(result, mask)
+            else:
+                result, variance = masking_frame(result,
+                                                 mask,
+                                                 variance)
             header["HISTORY"] = "Mask used: {}".format(mask)
+            header["HISTORY"] = "Interpolated bad pixels"
         if int(ext) == 0:
             hdul[0] = fits.PrimaryHDU(result, header=header)
         else:
