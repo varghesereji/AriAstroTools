@@ -19,7 +19,6 @@ from skimage.restoration import inpaint
 
 from pathlib import Path
 from astropy.io import fits
-from scipy.ndimage import shift
 
 from .operations import ari_operations
 from .operations import combine_data
@@ -588,20 +587,64 @@ def shifting_frame(input_fname,
                    shifttoapply=np.array([0., 0.]),
                    fluxext=[0],
                    varext=None):
+    """
+    Shift the image extensions of a FITS file by an integer pixel offset.
+
+    The specified flux extensions are shifted using ``numpy.roll``, which
+    performs a circular shift (pixels shifted off one edge reappear on the
+    opposite edge). If corresponding variance extensions are provided, they
+    are shifted by the same amount.
+
+    Parameters
+    ----------
+    input_fname : str or pathlib.Path
+        Path to the input FITS file.
+
+    opfilename : str or pathlib.Path
+        Path to the output FITS file.
+
+    shifttoapply : array-like of int, optional
+        Pixel shift to apply in the form ``(row_shift, column_shift)``.
+        Positive values shift the image towards increasing row or column
+        indices. The default is ``(0, 0)``.
+
+    fluxext : list of int, optional
+        List of FITS extensions containing flux images to be shifted.
+        The default is ``[0]``.
+
+    varext : list of int, optional
+        List of FITS extensions containing variance images corresponding
+        to ``fluxext``. If provided, each variance extension is shifted by
+        the same amount as its corresponding flux extension. The default
+        is ``None``.
+
+    Notes
+    -----
+    - Shifts are performed using ``numpy.roll`` and therefore are circular.
+    - Only integer pixel shifts are supported.
+    - The length of ``varext`` must match the length of ``fluxext`` when
+      provided.
+
+    Returns
+    -------
+    None
+        The shifted FITS file is written to ``opfilename``.
+    """
     primary_hdu = fits.PrimaryHDU()
     hdul = fits.HDUList([primary_hdu])
     header = fits.getheader(input_fname, ext=0)
-    header['HISOTRY'] = "Shifted by {}".format(shifttoapply)
+    header['HISTORY'] = "Shifted by {}".format(shifttoapply)
     for index, ext in enumerate(fluxext):
         inputimgdata = fits.getdata(input_fname, ext=int(ext))
-        shifted = shift(inputimgdata,
-                        shifttoapply,
-                        order=3)
+        shifted = np.roll(inputimgdata,
+                          shift=tuple(shifttoapply),
+                          axis=(0, 1))
         if varext is not None:
             var = fits.getdata(input_fname, ext=int(varext[index]))
-            shifted_var = shift(var,
-                                shifttoapply,
-                                order=3)
+            shifted_var = np.roll(var,
+                                  shift=tuple(shifttoapply),
+                                  axis=(0, 1)
+                                  )
         if int(ext) == 0:
             hdul[0] = fits.PrimaryHDU(shifted, header=header)
         else:
