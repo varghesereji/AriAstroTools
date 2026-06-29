@@ -19,7 +19,6 @@ from skimage.restoration import inpaint
 
 from pathlib import Path
 from astropy.io import fits
-from scipy.ndimage import shift
 
 from .operations import ari_operations
 from .operations import combine_data
