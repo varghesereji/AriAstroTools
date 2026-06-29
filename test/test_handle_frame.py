@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from astropy.io import fits
 from skimage.registration import phase_cross_correlation
-import matplotlib.pyplot as plt
+
 from ariastrotools.handle_frame import remove_cosmic_rays
 from ariastrotools.handle_frame import shifting_frame
 
