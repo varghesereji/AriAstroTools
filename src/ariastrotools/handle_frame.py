@@ -639,7 +639,6 @@ def shifting_frame(input_fname,
         shifted = np.roll(inputimgdata,
                           shift=tuple(shifttoapply),
                           axis=(0, 1))
-                        # order=3)
         if varext is not None:
             var = fits.getdata(input_fname, ext=int(varext[index]))
             shifted_var = np.roll(var,
