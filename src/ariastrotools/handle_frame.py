@@ -594,14 +594,16 @@ def shifting_frame(input_fname,
     header['HISOTRY'] = "Shifted by {}".format(shifttoapply)
     for index, ext in enumerate(fluxext):
         inputimgdata = fits.getdata(input_fname, ext=int(ext))
-        shifted = shift(inputimgdata,
-                        shifttoapply,
-                        order=3)
+        shifted = np.roll(inputimgdata,
+                          shift=tuple(shifttoapply),
+                          axis=(0, 1))
+                        # order=3)
         if varext is not None:
             var = fits.getdata(input_fname, ext=int(varext[index]))
-            shifted_var = shift(var,
-                                shifttoapply,
-                                order=3)
+            shifted_var = np.roll(var,
+                                  shift=tuple(shifttoapply),
+                                  axis=(0, 1)
+                                  )
         if int(ext) == 0:
             hdul[0] = fits.PrimaryHDU(shifted, header=header)
         else:
