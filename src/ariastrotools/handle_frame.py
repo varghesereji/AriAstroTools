@@ -588,6 +588,49 @@ def shifting_frame(input_fname,
                    shifttoapply=np.array([0., 0.]),
                    fluxext=[0],
                    varext=None):
+    """
+    Shift the image extensions of a FITS file by an integer pixel offset.
+
+    The specified flux extensions are shifted using ``numpy.roll``, which
+    performs a circular shift (pixels shifted off one edge reappear on the
+    opposite edge). If corresponding variance extensions are provided, they
+    are shifted by the same amount.
+
+    Parameters
+    ----------
+    input_fname : str or pathlib.Path
+        Path to the input FITS file.
+
+    opfilename : str or pathlib.Path
+        Path to the output FITS file.
+
+    shifttoapply : array-like of int, optional
+        Pixel shift to apply in the form ``(row_shift, column_shift)``.
+        Positive values shift the image towards increasing row or column
+        indices. The default is ``(0, 0)``.
+
+    fluxext : list of int, optional
+        List of FITS extensions containing flux images to be shifted.
+        The default is ``[0]``.
+
+    varext : list of int, optional
+        List of FITS extensions containing variance images corresponding
+        to ``fluxext``. If provided, each variance extension is shifted by
+        the same amount as its corresponding flux extension. The default
+        is ``None``.
+
+    Notes
+    -----
+    - Shifts are performed using ``numpy.roll`` and therefore are circular.
+    - Only integer pixel shifts are supported.
+    - The length of ``varext`` must match the length of ``fluxext`` when
+      provided.
+
+    Returns
+    -------
+    None
+        The shifted FITS file is written to ``opfilename``.
+    """
     primary_hdu = fits.PrimaryHDU()
     hdul = fits.HDUList([primary_hdu])
     header = fits.getheader(input_fname, ext=0)
