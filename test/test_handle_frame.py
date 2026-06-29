@@ -1,9 +1,10 @@
 import numpy as np
 import pytest
 from astropy.io import fits
-
+from skimage.registration import phase_cross_correlation
+import matplotlib.pyplot as plt
 from ariastrotools.handle_frame import remove_cosmic_rays
-
+from ariastrotools.handle_frame import shifting_frame
 
 @pytest.fixture
 def sample_fits(tmp_path):
@@ -78,3 +79,64 @@ def test_remove_cosmic_rays_without_variance(sample_fits, tmp_path):
         # Expect: cleaned flux + CRMASK only
         assert len(hdul) == 2
         assert "CRMASK" in hdul[1].name
+
+
+def test_shifting_frame(tmp_path):
+
+    # ----------------------------
+    # Create synthetic image
+    # ----------------------------
+    ny, nx = 100, 100
+    y, x = np.indices((ny, nx))
+
+    img = (
+        100*np.exp(-((x-30)**2 + (y-40)**2)/(2*3**2))
+        + 70*np.exp(-((x-70)**2 + (y-65)**2)/(2*5**2))
+    )
+
+    original = tmp_path / "original.fits"
+    dithered = tmp_path / "dithered.fits"
+    aligned = tmp_path / "aligned.fits"
+
+    fits.writeto(original, img, overwrite=True)
+
+    # ----------------------------
+    # Create dithered image
+    # ----------------------------
+    true_shift = np.array([6, -4])
+
+    dithered_img = np.roll(
+        img,
+        shift=tuple(true_shift),
+        axis=(0, 1)
+    )
+
+    fits.writeto(dithered, dithered_img, overwrite=True)
+
+    # ----------------------------
+    # Recover shift
+    # ----------------------------
+    shift, error, phase = phase_cross_correlation(
+        img,
+        dithered_img,
+        upsample_factor=1
+    )
+
+    # ----------------------------
+    # Run function under test
+    # ----------------------------
+    shifting_frame(
+        input_fname=dithered,
+        opfilename=aligned,
+        shifttoapply=shift.astype(int),
+        fluxext=[0]
+    )
+
+    recovered = fits.getdata(aligned)
+
+    # ----------------------------
+    # Assertions
+    # ----------------------------
+    np.testing.assert_array_equal(recovered, img)
+
+# End
