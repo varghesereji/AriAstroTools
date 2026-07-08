@@ -151,12 +151,12 @@ class Handle_NEID:
             flux = datadict[flux_kw].astype(np.float64)
             var = datadict[var_kw].astype(np.float64)
             wl = datadict[wl_kw].astype(np.float64)
-            blaze = datadict[blaze_kw].astype(np.float64)
+            blaze = 1 # datadict[blaze_kw].astype(np.float64)
             header_ext = headerdict[header_kws[0]]
             # print(header_ext)
             corr_wl, corr_header = self.barycorr(wl, header_ext)
             headerdict[header_kws[0]] = corr_header
-            newblaze = np.ones(blaze.shape)
+            newblaze = datadict[blaze_kw] # np.ones(blaze.shape)
             corr_flux = flux / blaze
             corr_var = var / blaze ** 2
             datadict[flux_kw] = corr_flux
