@@ -102,6 +102,7 @@ def masking_frame(frame, mask, variance=None, method='interpolate'):
 
     if method == 'nan':
         frame[~mask_bool] = np.nan
+        logger.info("Replacing bad pixels with NaN")
 
     elif method == 'interpolate':
         frame = inpaint.inpaint_biharmonic(
