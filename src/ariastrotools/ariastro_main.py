@@ -45,7 +45,7 @@ def main():
         logger.info("Variance extensions: {}".format(args.var))
     if args.wl is not None:
         logger.info("Wavelength extensions: {}".format(args.wl))
-
+    logger.info("Mode: {}, {}".format(args.mode, args.method))
     if args.mode == 'combine':
         print(fnames)
         if args.wl is None:
