@@ -47,7 +47,6 @@ def main():
         logger.info("Wavelength extensions: {}".format(args.wl))
     logger.info("Mode: {}, {}".format(args.mode, args.method))
     if args.mode == 'combine':
-        print(fnames)
         if args.wl is None:
             combine_process(fnames,
                             args.output,
