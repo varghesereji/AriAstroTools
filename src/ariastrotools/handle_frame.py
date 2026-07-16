@@ -24,6 +24,8 @@ from .operations import ari_operations
 from .operations import combine_data
 from .spectral_utils import combine_spectra
 
+from .logger import logger
+
 
 def masking_frame(frame, mask, variance=None, method='interpolate'):
     """
