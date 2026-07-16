@@ -108,6 +108,7 @@ def masking_frame(frame, mask, variance=None, method='interpolate'):
         frame = inpaint.inpaint_biharmonic(
             frame,
             ~mask_bool)
+        logger.info("Interpolating bad pixels.")
     if variance is not None:
         variance[~mask_bool] = 1000 * variance[~mask_bool]
         return frame, variance
