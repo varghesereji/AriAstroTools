@@ -111,6 +111,7 @@ def masking_frame(frame, mask, variance=None, method='interpolate'):
         logger.info("Interpolating bad pixels.")
     if variance is not None:
         variance[~mask_bool] = 1000 * variance[~mask_bool]
+        logger.info("Multiplying bad pixel variance with 1000")
         return frame, variance
     return frame
 
