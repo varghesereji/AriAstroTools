@@ -7,29 +7,32 @@ from .logger import logger
 def shrink_fits(filename, extensions, replace=False,
                 strict=True):
     """
-      Create a reduced FITS file containing only selected extensions.
+    Shrink a FITS file by retaining data only in selected extensions.
+
+    Extensions not listed in ``extensions`` are replaced with empty HDUs,
+    preserving their headers and extension names.
 
     Parameters
     ----------
     filename : str or pathlib.Path
         Input FITS file.
 
-    extensions : list
-        List of extensions to keep (excluding the primary HDU).
-        Extensions may be specified by either:
-        - extension names (str), e.g. ["SCI", "ACTIVITY"]
-        - extension numbers (int), e.g. [1, 3, 5]
-
-        The primary HDU (extension 0) is always retained.
+    extensions : list of str or int
+        Extension names and/or extension numbers to retain.
+        The primary HDU (extension 0) is always preserved.
 
     replace : bool, optional
-        If True, overwrite the original file. Otherwise, create a new
-        file with the suffix ``.shrink.fits``. Default is False.
+        If True, overwrite the original file. Otherwise create a new file
+        with suffix ``.shrink.fits``. Default is False.
+
+    strict : bool, optional
+        If True (default), raise an exception if any requested extension
+        does not exist. Otherwise, issue a warning and continue.
 
     Returns
     -------
     str
-        Path to the output FITS file.
+        Name of the output FITS file.
     """
     filename = Path(filename)
     logger.info("shrinking file {}".format(filename))
