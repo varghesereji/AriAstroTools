@@ -43,7 +43,7 @@ def shrink_fits(filename, extensions, replace=False,
 
     removed = []
     with fits.open(filename) as hdul:
-         # ----------------------------------------------------------
+        # ----------------------------------------------------------
         # Validate requested extensions
         # ----------------------------------------------------------
         available_names = {hdu.name for hdu in hdul[1:]}
