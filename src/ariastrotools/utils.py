@@ -36,7 +36,7 @@ def shrink_fits(filename, extensions, replace=False):
         outfile = filename
     else:
         outfile = filename.with_suffix("").with_suffix(".srink.fits")
-    new_hdus = []
+
     removed = []
     with fits.open(filename) as hdul:
         primary = hdul[0].copy()
