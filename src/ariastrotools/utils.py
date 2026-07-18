@@ -52,6 +52,8 @@ def shrink_fits(filename, extensions, replace=False,
         missing = []
 
         for ext in extensions:
+            if ext == 0 or (isinstance(ext, str) and ext.upper() == "PRIMARY"):
+                continue
             if isinstance(ext, str):
                 if ext not in available_names:
                     missing.append(ext)
