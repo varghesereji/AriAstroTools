@@ -4,7 +4,8 @@ from pathlib import Path
 from .logger import logger
 
 
-def shrink_fits(filename, extensions, replace=False):
+def shrink_fits(filename, extensions, replace=False,
+                strict=True):
     """
       Create a reduced FITS file containing only selected extensions.
 
@@ -39,6 +40,30 @@ def shrink_fits(filename, extensions, replace=False):
 
     removed = []
     with fits.open(filename) as hdul:
+         # ----------------------------------------------------------
+        # Validate requested extensions
+        # ----------------------------------------------------------
+        available_names = {hdu.name for hdu in hdul[1:]}
+        available_numbers = set(range(1, len(hdul)))
+
+        missing = []
+
+        for ext in extensions:
+            if isinstance(ext, str):
+                if ext not in available_names:
+                    missing.append(ext)
+            elif isinstance(ext, int):
+                if ext not in available_numbers:
+                    missing.append(ext)
+
+        if missing:
+            msg = (
+                "The following requested extensions do not exist: "
+                + ", ".join(map(str, missing))
+            )
+            if strict:
+                raise ValueError(msg)
+            logger.warning(msg)
         primary = hdul[0].copy()
         primary.header.add_history("File shrunk using shrink_fits().")
         new_hdus = [primary]  # Always keep the primary HDU
