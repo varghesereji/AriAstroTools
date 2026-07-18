@@ -1,4 +1,74 @@
 from astropy.io import fits
+from pathlib import Path
+
+
+def shrink_fits(filename, extensions, replace=False):
+    """
+      Create a reduced FITS file containing only selected extensions.
+
+    Parameters
+    ----------
+    filename : str or pathlib.Path
+        Input FITS file.
+
+    extensions : list
+        List of extensions to keep (excluding the primary HDU).
+        Extensions may be specified by either:
+        - extension names (str), e.g. ["SCI", "ACTIVITY"]
+        - extension numbers (int), e.g. [1, 3, 5]
+
+        The primary HDU (extension 0) is always retained.
+
+    replace : bool, optional
+        If True, overwrite the original file. Otherwise, create a new
+        file with the suffix ``.shrink.fits``. Default is False.
+
+    Returns
+    -------
+    str
+        Path to the output FITS file.
+    """
+    filename = Path(filename)
+    print("shrinking file {}".format(filename))
+    if replace:
+        outfile = filename
+    else:
+        outfile = filename.with_suffix("").with_suffix(".srink.fits")
+    print("outfile", outfile)
+    new_hdus = []
+    with fits.open(filename) as hdul:
+        new_hdus.append(hdul[0].copy())  # Always keep the primary HDU
+        
+        for i, hdu in enumerate(hdul[1:], start=1):
+            keep = (i in extensions) or (hdu.name in extensions)
+
+            if keep:
+                new_hdus.append(hdu.copy())
+            else:
+                header = hdu.header.copy()
+                if isinstance(hdu, fits.ImageHDU):
+                    new_hdu = fits.ImageHDU(
+                        data=None,
+                        header=header,
+                        name=hdu.name)
+                elif isinstance(hdu, fits.BinTableHDU):
+                    new_hdu = fits.BinTableHDU(
+                        data=None,
+                        header=header,
+                        name=hdu.name
+                    )
+                else:
+                    # Fallback for any other extension type
+                    new_hdu = fits.ImageHDU(
+                        data=None,
+                        header=header,
+                        name=hdu.name
+                    )
+                new_hdus.append(new_hdu)
+
+        fits.HDUList(new_hdus).writeto(outfile, overwrite=True)
+
+    return str(outfile)
 
 
 def extract_data_header(hdu, ext=0):
