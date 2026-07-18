@@ -103,7 +103,7 @@ def shrink_fits(filename, extensions, replace=False,
                 "Removed data from extensions: "
                 + ", ".join(removed)
             )
-        fits.HDUList(new_hdus).writeto(outfile, overwrite=True)
+    fits.HDUList(new_hdus).writeto(outfile, overwrite=True)
 
     return str(outfile)
 
