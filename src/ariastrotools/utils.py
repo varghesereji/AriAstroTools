@@ -36,6 +36,7 @@ def shrink_fits(filename, extensions, replace=False):
         outfile = filename.with_suffix("").with_suffix(".srink.fits")
     print("outfile", outfile)
     new_hdus = []
+    removed = []
     with fits.open(filename) as hdul:
         primary = hdul[0].copy()
         primary.header.add_history("File shrunk using shrink_fits().")
@@ -47,6 +48,7 @@ def shrink_fits(filename, extensions, replace=False):
             if keep:
                 new_hdus.append(hdu.copy())
             else:
+                removed.append(hdu.name)
                 header = hdu.header.copy()
                 if isinstance(hdu, fits.ImageHDU):
                     new_hdu = fits.ImageHDU(
@@ -67,7 +69,11 @@ def shrink_fits(filename, extensions, replace=False):
                         name=hdu.name
                     )
                 new_hdus.append(new_hdu)
-
+        if removed:
+            primary.header.add_history(
+                "Removed data from extensions: "
+                + ", ".join(removed)
+            )
         fits.HDUList(new_hdus).writeto(outfile, overwrite=True)
 
     return str(outfile)
