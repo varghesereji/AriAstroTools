@@ -71,10 +71,11 @@ def shrink_fits(filename, extensions, replace=False,
             logger.warning(msg)
         primary = hdul[0].copy()
         primary.header.add_history("File shrunk using shrink_fits().")
+        extensions_set = set(extensions)
         new_hdus = [primary]  # Always keep the primary HDU
 
         for i, hdu in enumerate(hdul[1:], start=1):
-            keep = (i in extensions) or (hdu.name in extensions)
+            keep = (i in extensions_set) or (hdu.name in extensions_set)
 
             if keep:
                 new_hdus.append(hdu.copy())
