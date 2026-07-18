@@ -1,6 +1,8 @@
 from astropy.io import fits
 from pathlib import Path
 
+from .logger import logger
+
 
 def shrink_fits(filename, extensions, replace=False):
     """
@@ -29,12 +31,11 @@ def shrink_fits(filename, extensions, replace=False):
         Path to the output FITS file.
     """
     filename = Path(filename)
-    print("shrinking file {}".format(filename))
+    logger.info("shrinking file {}".format(filename))
     if replace:
         outfile = filename
     else:
         outfile = filename.with_suffix("").with_suffix(".srink.fits")
-    print("outfile", outfile)
     new_hdus = []
     removed = []
     with fits.open(filename) as hdul:
