@@ -1,4 +1,114 @@
 from astropy.io import fits
+from pathlib import Path
+
+from .logger import logger
+
+
+def shrink_fits(filename, extensions, replace=False,
+                strict=True):
+    """
+    Shrink a FITS file by retaining data only in selected extensions.
+
+    Extensions not listed in ``extensions`` are replaced with empty HDUs,
+    preserving their headers and extension names.
+
+    Parameters
+    ----------
+    filename : str or pathlib.Path
+        Input FITS file.
+
+    extensions : list of str or int
+        Extension names and/or extension numbers to retain.
+        The primary HDU (extension 0) is always preserved.
+
+    replace : bool, optional
+        If True, overwrite the original file. Otherwise create a new file
+        with suffix ``.shrink.fits``. Default is False.
+
+    strict : bool, optional
+        If True (default), raise an exception if any requested extension
+        does not exist. Otherwise, issue a warning and continue.
+
+    Returns
+    -------
+    str
+        Name of the output FITS file.
+    """
+    filename = Path(filename)
+    logger.info("shrinking file {}".format(filename))
+    if replace:
+        outfile = filename
+    else:
+        outfile = filename.with_suffix("").with_suffix(".shrink.fits")
+
+    removed = []
+    with fits.open(filename) as hdul:
+        # ----------------------------------------------------------
+        # Validate requested extensions
+        # ----------------------------------------------------------
+        available_names = {hdu.name for hdu in hdul[1:]}
+        available_numbers = set(range(1, len(hdul)))
+
+        missing = []
+
+        for ext in extensions:
+            if ext == 0 or (isinstance(ext, str) and ext.upper() == "PRIMARY"):
+                continue
+            if isinstance(ext, str):
+                if ext not in available_names:
+                    missing.append(ext)
+            elif isinstance(ext, int):
+                if ext not in available_numbers:
+                    missing.append(ext)
+
+        if missing:
+            msg = (
+                "The following requested extensions do not exist: "
+                + ", ".join(map(str, missing))
+            )
+            if strict:
+                raise ValueError(msg)
+            logger.warning(msg)
+        primary = hdul[0].copy()
+        primary.header.add_history("File shrunk using shrink_fits().")
+        extensions_set = set(extensions)
+        new_hdus = [primary]  # Always keep the primary HDU
+
+        for i, hdu in enumerate(hdul[1:], start=1):
+            keep = (i in extensions_set) or (hdu.name in extensions_set)
+
+            if keep:
+                new_hdus.append(hdu.copy())
+            else:
+                removed.append(hdu.name)
+                header = hdu.header.copy()
+                if isinstance(hdu, fits.ImageHDU):
+                    new_hdu = fits.ImageHDU(
+                        data=None,
+                        header=header,
+                        name=hdu.name)
+                elif isinstance(hdu, fits.BinTableHDU):
+                    new_hdu = fits.BinTableHDU(
+                        data=None,
+                        header=header,
+                        name=hdu.name
+                    )
+                else:
+                    # Fallback for any other extension type
+                    new_hdu = fits.ImageHDU(
+                        data=None,
+                        header=header,
+                        name=hdu.name
+                    )
+                new_hdus.append(new_hdu)
+        if removed:
+            primary.header.add_history(
+                "Removed data from extensions: "
+                + ", ".join(removed)
+            )
+    fits.HDUList(new_hdus).writeto(outfile, overwrite=True)
+
+    return str(outfile)
 
 
 def extract_data_header(hdu, ext=0):
