@@ -10,3 +10,4 @@ This section contains the API documentation for all modules in **AriAstroTools**
    source/operations
    source/utils
    source/handle_frame
+   source/instrument
