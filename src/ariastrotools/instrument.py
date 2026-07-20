@@ -155,7 +155,6 @@ class Handle_NEID:
         return corr_wl_array, header
 
     def process_data(self, fname,
-                     telluric=False,
                      contnorm=False):
         """
         Process a NEID FITS file: barycentric correction, blaze correction,
