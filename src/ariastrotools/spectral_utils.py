@@ -226,6 +226,8 @@ def combine_spectra(filesre="*.fits", directory=".",
     headerdict_main = None
     file_list = []
     if instrumentname is not None:
+        instname_list = instrumentname.strip().split("_")
+        instrumentname = instname_list[0]
         instrument = instrument_dict[instrumentname]()
         fluxext, varext, wlext = instrument.fits_extensions()
     req_qtys_dict = defaultdict(list)
