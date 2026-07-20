@@ -73,11 +73,11 @@ class Handle_NEID:
         The science flux is divided by the combined telluric transmission,
         computed as the product of the two telluric components stored in the
         ``TELLURIC`` array. The corresponding variance is scaled by the square
-        of the transmission to preserve the uncertainty propagation.
+        of the transmission to preserve uncertainty propagation.
 
-        After the correction, the telluric model is replaced with a unity
-        transmission array to indicate that the correction has already been
-        applied.
+        After the correction, the telluric transmission is replaced with a
+        unity array of the same shape to indicate that the telluric correction
+        has already been applied.
 
         Parameters
         ----------
@@ -101,8 +101,8 @@ class Handle_NEID:
 
             - ``'SCIFLUX'`` replaced by the telluric-corrected flux.
             - ``'SCIVAR'`` replaced by the propagated variance.
-            - ``'TELLURIC'`` replaced by ``np.array([[[1, 1]]])`` to indicate
-              that no further telluric correction is required.
+            - ``'TELLURIC'`` replaced by a unity transmission array with the
+              same shape as the original telluric array.
         """
         tellurics = datadict['TELLURIC']
         full_tellurics = tellurics[:, :, 0] * tellurics[:, :, 1]
