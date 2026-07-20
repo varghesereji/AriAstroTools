@@ -182,7 +182,6 @@ class Handle_NEID:
             datadict = continuum_normalize(datadict, sci_ext, var_ext, wl_ext)
         return datadict, headerdict
 
-
     def req_qtys(self):
         """
         Dictonary format:
