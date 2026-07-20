@@ -112,7 +112,7 @@ class Handle_NEID:
         corr_var = var / full_tellurics ** 2
         datadict['SCIFLUX'] = corr_flux
         datadict['SCIVAR'] = corr_var
-        datadict['TELLURIC'] = np.ones_lise(tellurics)
+        datadict['TELLURIC'] = np.ones_like(tellurics)
         return datadict
 
     def barycorr(self, wl_array, header):
