@@ -67,6 +67,43 @@ class Handle_NEID:
         return datadict, headerdict
 
     def telluric_correction(self, datadict):
+        """
+        Apply telluric correction to the science spectrum.
+
+        The science flux is divided by the combined telluric transmission,
+        computed as the product of the two telluric components stored in the
+        ``TELLURIC`` array. The corresponding variance is scaled by the square
+        of the transmission to preserve the uncertainty propagation.
+
+        After the correction, the telluric model is replaced with a unity
+        transmission array to indicate that the correction has already been
+        applied.
+
+        Parameters
+        ----------
+        datadict : dict
+            Dictionary containing the extracted science data. The following
+            keys are required:
+
+            - ``'SCIFLUX'`` : ndarray
+              Science flux array.
+            - ``'SCIVAR'`` : ndarray
+              Variance corresponding to ``SCIFLUX``.
+            - ``'TELLURIC'`` : ndarray
+              Telluric transmission array of shape ``(n_orders, n_pixels, 2)``,
+              where the final dimension contains two multiplicative telluric
+              components.
+
+        Returns
+        -------
+        dict
+            The input dictionary with the following updates:
+
+            - ``'SCIFLUX'`` replaced by the telluric-corrected flux.
+            - ``'SCIVAR'`` replaced by the propagated variance.
+            - ``'TELLURIC'`` replaced by ``np.array([[[1, 1]]])`` to indicate
+              that no further telluric correction is required.
+        """
         tellurics = datadict['TELLURIC']
         full_tellurics = tellurics[:, :, 0] * tellurics[:, :, 1]
         flux = datadict['SCIFLUX']
