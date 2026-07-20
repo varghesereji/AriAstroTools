@@ -157,29 +157,32 @@ class Handle_NEID:
     def process_data(self, fname,
                      contnorm=False):
         """
-        Process a NEID FITS file: barycentric correction, blaze correction,
-        and variance correction.
+        Process a NEID FITS file.
 
-        This method:
-        - Reads in the flux, variance, wavelength, blaze, and header data.
-        - Applies barycentric correction to the wavelength arrays.
-        - Replaces blaze arrays with ones (effectively removing blaze shape).
-        - Corrects flux and variance for blaze.
-        - Continuum normalization. (optional)
+        This method reads the science data from a NEID FITS file, applies the
+        barycentric correction to the wavelength arrays, and optionally
+        continuum-normalizes the science spectra.
 
         Parameters
         ----------
         fname : str
             Path to the NEID FITS file.
+        contnorm : bool, optional
+            If ``True``, continuum-normalize the science flux and variance
+            using :func:`continuum_normalize`. Default is ``False``.
 
         Returns
         -------
         datadict : dict
-            Dictionary with corrected data arrays (flux, variance, blaze).
+            Dictionary containing the processed data arrays. The science
+            flux and variance are stored as ``float64`` arrays, and the
+            wavelength arrays are updated with the barycentric correction.
+            If ``contnorm`` is ``True``, the science flux and variance are
+            continuum-normalized.
         headerdict : dict
-            Dictionary with updated FITS headers.
-        contnorm  :  bool
-            Do continuum division with the function continuum_normalize.
+            Dictionary containing the updated FITS headers. The primary
+            header is modified to include the barycentric correction
+            keywords.
         """
         datadict, headerdict = self.getfull_data(fname)
         # print(datadict)
