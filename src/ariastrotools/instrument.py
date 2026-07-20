@@ -66,6 +66,18 @@ class Handle_NEID:
         datadict, headerdict = extract_allexts(fname)
         return datadict, headerdict
 
+    def telluric_correction(self, datadict):
+        tellurics = datadict['TELLURIC']
+        full_tellurics = tellurics[:, :, 0] * tellurics[:, :, 1]
+        flux = datadict['SCIFLUX']
+        var = datadict['SCIVAR']
+        corr_flux = flux / full_tellurics
+        corr_var = var / full_tellurics ** 2
+        datadict['SCIFLUX'] = corr_flux
+        datadict['SCIVAR'] = corr_var
+        datadict['TELLURIC'] = np.array([[[1, 1]]])
+        return datadict
+
     def barycorr(self, wl_array, header):
         """
         Apply barycentric correction to the wavelength array.
@@ -105,7 +117,9 @@ class Handle_NEID:
 
         return corr_wl_array, header
 
-    def process_data(self, fname, contnorm=False):
+    def process_data(self, fname,
+                     telluric=False,
+                     contnorm=False):
         """
         Process a NEID FITS file: barycentric correction, blaze correction,
         and variance correction.
@@ -167,6 +181,7 @@ class Handle_NEID:
             from .spectral_utils import continuum_normalize
             datadict = continuum_normalize(datadict, sci_ext, var_ext, wl_ext)
         return datadict, headerdict
+
 
     def req_qtys(self):
         """
