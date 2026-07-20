@@ -242,6 +242,9 @@ def combine_spectra(filesre="*.fits", directory=".",
         if instrumentname is not None:
             datadict, headerdict = instrument.process_data(fname=specfile,
                                                            contnorm=False)
+            if telluric_corr:
+                datadict = instrument.telluric_correction(datadict)
+                headerdict['SCIFLUX']['HISTORY'] = "Telluric correction done"
             req_qtys = instrument.req_qtys()
 
         else:
