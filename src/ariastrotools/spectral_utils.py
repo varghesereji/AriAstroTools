@@ -225,7 +225,12 @@ def combine_spectra(filesre="*.fits", directory=".",
     data_dict = defaultdict(list)
     headerdict_main = None
     file_list = []
+    telluric_corr = False
     if instrumentname is not None:
+        instname_list = instrumentname.strip().split("_")
+        instrumentname = instname_list[0]
+        if len(instname_list) > 1:
+            telluric_corr = instname_list[1].lower() == 'tel'
         instrument = instrument_dict[instrumentname]()
         fluxext, varext, wlext = instrument.fits_extensions()
     req_qtys_dict = defaultdict(list)
@@ -237,6 +242,9 @@ def combine_spectra(filesre="*.fits", directory=".",
         if instrumentname is not None:
             datadict, headerdict = instrument.process_data(fname=specfile,
                                                            contnorm=False)
+            if telluric_corr:
+                datadict = instrument.telluric_correction(datadict)
+                headerdict['SCIFLUX'].add_history("Telluric correction done")
             req_qtys = instrument.req_qtys()
 
         else:

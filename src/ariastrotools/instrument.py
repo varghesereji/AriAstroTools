@@ -66,6 +66,55 @@ class Handle_NEID:
         datadict, headerdict = extract_allexts(fname)
         return datadict, headerdict
 
+    def telluric_correction(self, datadict):
+        """
+        Apply telluric correction to the science spectrum.
+
+        The science flux is divided by the combined telluric transmission,
+        computed as the product of the two telluric components stored in the
+        ``TELLURIC`` array. The corresponding variance is scaled by the square
+        of the transmission to preserve uncertainty propagation.
+
+        After the correction, the telluric transmission is replaced with a
+        unity array of the same shape to indicate that the telluric correction
+        has already been applied.
+
+        Parameters
+        ----------
+        datadict : dict
+            Dictionary containing the extracted science data. The following
+            keys are required:
+
+            - ``'SCIFLUX'`` : ndarray
+              Science flux array.
+            - ``'SCIVAR'`` : ndarray
+              Variance corresponding to ``SCIFLUX``.
+            - ``'TELLURIC'`` : ndarray
+              Telluric transmission array of shape ``(n_orders, n_pixels, 2)``,
+              where the final dimension contains two multiplicative telluric
+              components.
+
+        Returns
+        -------
+        dict
+            The input dictionary with the following updates:
+
+            - ``'SCIFLUX'`` replaced by the telluric-corrected flux.
+            - ``'SCIVAR'`` replaced by the propagated variance.
+            - ``'TELLURIC'`` replaced by a unity transmission array with the
+              same shape as the original telluric array.
+        """
+        tellurics = datadict['TELLURIC']
+        full_tellurics = tellurics[:, :, 0] * tellurics[:, :, 1]
+        flux = datadict['SCIFLUX']
+        var = datadict['SCIVAR']
+        corr_flux = flux / full_tellurics
+        corr_var = var / full_tellurics ** 2
+        datadict['SCIFLUX'] = corr_flux
+        datadict['SCIVAR'] = corr_var
+        datadict['TELLURIC'] = np.ones_like(tellurics)
+        return datadict
+
     def barycorr(self, wl_array, header):
         """
         Apply barycentric correction to the wavelength array.
@@ -105,31 +154,35 @@ class Handle_NEID:
 
         return corr_wl_array, header
 
-    def process_data(self, fname, contnorm=False):
+    def process_data(self, fname,
+                     contnorm=False):
         """
-        Process a NEID FITS file: barycentric correction, blaze correction,
-        and variance correction.
+        Process a NEID FITS file.
 
-        This method:
-        - Reads in the flux, variance, wavelength, blaze, and header data.
-        - Applies barycentric correction to the wavelength arrays.
-        - Replaces blaze arrays with ones (effectively removing blaze shape).
-        - Corrects flux and variance for blaze.
-        - Continuum normalization. (optional)
+        This method reads the science data from a NEID FITS file, applies the
+        barycentric correction to the wavelength arrays, and optionally
+        continuum-normalizes the science spectra.
 
         Parameters
         ----------
         fname : str
             Path to the NEID FITS file.
+        contnorm : bool, optional
+            If ``True``, continuum-normalize the science flux and variance
+            using :func:`continuum_normalize`. Default is ``False``.
 
         Returns
         -------
         datadict : dict
-            Dictionary with corrected data arrays (flux, variance, blaze).
+            Dictionary containing the processed data arrays. The science
+            flux and variance are stored as ``float64`` arrays, and the
+            wavelength arrays are updated with the barycentric correction.
+            If ``contnorm`` is ``True``, the science flux and variance are
+            continuum-normalized.
         headerdict : dict
-            Dictionary with updated FITS headers.
-        contnorm  :  bool
-            Do continuum division with the function continuum_normalize.
+            Dictionary containing the updated FITS headers. The primary
+            header is modified to include the barycentric correction
+            keywords.
         """
         datadict, headerdict = self.getfull_data(fname)
         # print(datadict)
@@ -137,7 +190,7 @@ class Handle_NEID:
         sci_ext = [1, 2, 3]
         var_ext = [4, 5, 6]
         wl_ext = [7, 8, 9]
-        blaze_ext = [15, 16, 17]
+        # blaze_ext = [15, 16, 17]
         header_kws = list(datadict.keys())
         # print(header_kws)
         for n, ext in enumerate(sci_ext):
@@ -145,24 +198,24 @@ class Handle_NEID:
             flux_kw = header_kws[sci_ext[n]]
             var_kw = header_kws[var_ext[n]]
             wl_kw = header_kws[wl_ext[n]]
-            blaze_kw = header_kws[blaze_ext[n]]
+            # blaze_kw = header_kws[blaze_ext[n]]
             # print(flux_kw, var_kw, wl_kw, blaze_kw)
 
             flux = datadict[flux_kw].astype(np.float64)
             var = datadict[var_kw].astype(np.float64)
             wl = datadict[wl_kw].astype(np.float64)
-            blaze = datadict[blaze_kw].astype(np.float64)
+            # blaze = datadict[blaze_kw].astype(np.float64)
             header_ext = headerdict[header_kws[0]]
             # print(header_ext)
             corr_wl, corr_header = self.barycorr(wl, header_ext)
             headerdict[header_kws[0]] = corr_header
-            newblaze = np.ones(blaze.shape)
-            corr_flux = flux / blaze
-            corr_var = var / blaze ** 2
-            datadict[flux_kw] = corr_flux
-            datadict[var_kw] = corr_var
+            # newblaze = np.ones(blaze.shape)
+            # corr_flux = flux / blaze
+            # corr_var = var / blaze ** 2
+            datadict[flux_kw] = flux
+            datadict[var_kw] = var
             datadict[wl_kw] = corr_wl
-            datadict[blaze_kw] = newblaze
+            # datadict[blaze_kw] = newblaze
         if contnorm:
             from .spectral_utils import continuum_normalize
             datadict = continuum_normalize(datadict, sci_ext, var_ext, wl_ext)
