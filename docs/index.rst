@@ -17,7 +17,6 @@ perform continuum normalization with error propagation.
 
    installation
    quickstart
-   usage
    flowchart
    api
 
