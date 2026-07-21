@@ -1,7 +1,7 @@
 instrument module
 =================
 
-.. automodule:: ariastrotools.handle_frame
+.. automodule:: ariastrotools.instrument
    :members:
    :undoc-members:
    :show-inheritance:
