@@ -1,11 +1,11 @@
 ariastrotools package
-================
+=====================
 
 Submodules
 ----------
 
 ariastrotools.ariastrotools\_main module
-------------------------------
+----------------------------------------
 
 .. automodule:: ariastrotools.ariastro_main
    :members:
@@ -13,7 +13,7 @@ ariastrotools.ariastrotools\_main module
    :undoc-members:
 
 ariastrotools.instrument module
---------------------------
+-------------------------------
 
 .. automodule:: ariastrotools.instrument
    :members:
@@ -21,7 +21,7 @@ ariastrotools.instrument module
    :undoc-members:
 
 ariastrotools.logger module
-----------------------
+---------------------------
 
 .. automodule:: ariastrotools.logger
    :members:
@@ -29,7 +29,7 @@ ariastrotools.logger module
    :undoc-members:
 
 ariastrotools.operations module
---------------------------
+-------------------------------
 
 .. automodule:: ariastrotools.operations
    :members:
@@ -37,7 +37,7 @@ ariastrotools.operations module
    :undoc-members:
 
 ariastrotools.handle_frame module
------------------------------
+---------------------------------
 
 .. automodule:: ariastrotools.handle_frame
    :members:
@@ -45,7 +45,7 @@ ariastrotools.handle_frame module
    :undoc-members:
 
 ariastrotools.setups module
-----------------------
+---------------------------
 
 .. automodule:: ariastrotools.setups
    :members:
@@ -53,7 +53,7 @@ ariastrotools.setups module
    :undoc-members:
 
 ariastrotools.spectral\_utils module
--------------------------------
+------------------------------------
 
 .. automodule:: ariastrotools.spectral_utils
    :members:

@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 AriAstroTools documentation
-======================
+===========================
 
 AriAstroTools is a Python package for combining and analyzing astronomical FITS files.
 It provides tools to average, add, subtract, or divide spectra/images and 
