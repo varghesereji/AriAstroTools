@@ -40,7 +40,7 @@ For specific instruments (e.g., **NEID**):
 
 
 Binary Operations
-===========
+=================
 
 For binary operations (`+`, `-`, `*`, `/`):
 
