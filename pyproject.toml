@@ -18,7 +18,8 @@ dependencies = [
     "pyfiglet",
     "colorama",
     "specutils",
-    "astroscrappy"
+    "astroscrappy",
+    "scikit-image"
 ]
 keywords = ["example", "package"]
 classifiers = [
