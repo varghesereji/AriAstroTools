@@ -158,49 +158,46 @@ def extract_allexts(fname):
 
 def create_fits(datadict, header_dict, filename="Avg_neid_data.fits"):
     """
-    Create a multi-extension FITS file from a dictionary of data arrays and
-    headers.
+    Create a multi-extension FITS file from a dictionary of data arrays
+    and headers.
 
     Parameters
     ----------
     datadict : dict
-        Dictionary mapping extension names (str) to their corresponding data.
-        - The first entry in `datadict` is treated as the *primary HDU*.
-        - Other entries are written as either `ImageHDU` (for numeric arrays)
-          or `BinTableHDU` (for tabular/structured arrays, e.g. 'ACTIVITY').
+        Dictionary mapping extension names to their corresponding data.
+
+        The first entry is written as the primary HDU. Remaining entries
+        are written as ``ImageHDU`` objects, except those listed in
+        ``tablehdu``, which are written as ``BinTableHDU`` objects.
 
     header_dict : dict
-        Dictionary mapping extension names (str) to FITS header information.
-        Each value must be compatible with `astropy.io.fits.Header`.
+        Dictionary mapping extension names to FITS header information.
+        Each value must be compatible with ``astropy.io.fits.Header``.
 
     filename : str, optional
-        Name of the FITS file to create. Default is `"Avg_neid_data.fits"`.
+        Name of the output FITS file. Default is
+        ``"Avg_neid_data.fits"``.
 
     Notes
     -----
-    - The function automatically selects `BinTableHDU` for extensions
-      listed in `tablehdu` (currently only `'ACTIVITY'`).
-    - All other extensions are written as `ImageHDU`.
-    - Existing files with the same name are overwritten.
+    The function automatically selects ``BinTableHDU`` for extensions
+    listed in ``tablehdu`` (currently only ``ACTIVITY``). All other
+    extensions are written as ``ImageHDU`` objects. Existing files with
+    the same name are overwritten.
 
     Examples
     --------
     >>> datadict = {
-    ...     "PRIMARY": np.zeros((100, 100)),        # primary HDU data
-    ...     "SCIENCE": np.random.random((50, 50)),  # image extension
-    ...     "ACTIVITY": structured_array            # table extension
+    ...     "PRIMARY": np.zeros((100, 100)),
+    ...     "SCIENCE": np.random.random((50, 50)),
+    ...     "ACTIVITY": structured_array,
     ... }
     >>> header_dict = {
     ...     "PRIMARY": {"OBSERVER": "Varghese"},
     ...     "SCIENCE": {"EXTNAME": "SCIENCE"},
-    ...     "ACTIVITY": {"COMMENT": "Activity indices"}
+    ...     "ACTIVITY": {"COMMENT": "Activity indices"},
     ... }
     >>> create_fits(datadict, header_dict, filename="output.fits")
-
-    This will produce a FITS file with:
-    - A primary HDU containing the first dataset.
-    - An image extension for "SCIENCE".
-    - A binary table extension for "ACTIVITY".
     """
     header_names = list(datadict.keys())
     hdus = []
