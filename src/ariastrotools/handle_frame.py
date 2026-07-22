@@ -465,8 +465,8 @@ def divide_smoothgradient(filename,
             if varext is not None:
                 var = fits.getdata(filename, ext=int(varext[index]))
                 NormCont_var = var / smoothGrad ** 2
-            header['HISTORY'] = 'Divided median filter size: {}'.format(
-                medsmoothsize)
+            header.add_history('Divided median filter size: {}'.format(
+                medsmoothsize))
             if int(ext) == 0:
                 hdul[0] = fits.PrimaryHDU(NormContdata, header=header)
             else:
