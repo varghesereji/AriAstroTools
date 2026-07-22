@@ -194,9 +194,9 @@ def operate_process(ip1, ip2,
         ext = int(ext)
         header = hdul[ext].header
         data1 = hdul1[ext].data
-        header['HISTORY'] = '{} {} {}'.format(Path(ip1).name,
-                                              operation,
-                                              Path(ip2).name)
+        header.add_history('{} {} {}'.format(Path(ip1).name,
+                                             operation,
+                                             Path(ip2).name))
         if varext is None:
             var1 = None
         else:
@@ -359,7 +359,7 @@ def combine_process(files,
                                             var=var_array,
                                             method=method)
         to_history = [Path(i).name for i in files_list]
-        header["HISTORY"] = method + str(to_history)
+        header.add_history(method + str(to_history))
         if mask is not None:
             if varext is None:
                 result = masking_frame(result, mask)
@@ -367,8 +367,8 @@ def combine_process(files,
                 result, variance = masking_frame(result,
                                                  mask,
                                                  variance)
-            header["HISTORY"] = "Mask used: {}".format(mask)
-            header["HISTORY"] = "Interpolated bad pixels"
+            header.add_history("Mask used: {}".format(mask))
+            header.add_history("Interpolated bad pixels")
         if int(ext) == 0:
             hdul[0] = fits.PrimaryHDU(result, header=header)
         else:
@@ -465,8 +465,8 @@ def divide_smoothgradient(filename,
             if varext is not None:
                 var = fits.getdata(filename, ext=int(varext[index]))
                 NormCont_var = var / smoothGrad ** 2
-            header['HISTORY'] = 'Divided median filter size: {}'.format(
-                medsmoothsize)
+            header.add_history('Divided median filter size: {}'.format(
+                medsmoothsize))
             if int(ext) == 0:
                 hdul[0] = fits.PrimaryHDU(NormContdata, header=header)
             else:
@@ -566,7 +566,7 @@ def remove_cosmic_rays(input_fname,
             crmask, cleararr = astroscrappy.detect_cosmics(inputimgdata,
                                                            inputvardata)
         header = fits.getheader(input_fname, ext=0)
-        header['HISTORY'] = "Cosmic Rays removed with astroscrappy"
+        header.add_history("Cosmic Rays removed with astroscrappy")
         if int(ext) == 0:
             hdul[0] = fits.PrimaryHDU(cleararr, header=header)
         else:
@@ -638,7 +638,7 @@ def shifting_frame(input_fname,
     primary_hdu = fits.PrimaryHDU()
     hdul = fits.HDUList([primary_hdu])
     header = fits.getheader(input_fname, ext=0)
-    header['HISTORY'] = "Shifted by {}".format(shifttoapply)
+    header.add_history("Shifted by {}".format(shifttoapply))
     for index, ext in enumerate(fluxext):
         inputimgdata = fits.getdata(input_fname, ext=int(ext))
         shifted = np.roll(inputimgdata,
