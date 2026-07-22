@@ -638,7 +638,7 @@ def shifting_frame(input_fname,
     primary_hdu = fits.PrimaryHDU()
     hdul = fits.HDUList([primary_hdu])
     header = fits.getheader(input_fname, ext=0)
-    header['HISTORY'] = "Shifted by {}".format(shifttoapply)
+    header.add_history("Shifted by {}".format(shifttoapply))
     for index, ext in enumerate(fluxext):
         inputimgdata = fits.getdata(input_fname, ext=int(ext))
         shifted = np.roll(inputimgdata,
