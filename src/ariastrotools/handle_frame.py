@@ -359,7 +359,7 @@ def combine_process(files,
                                             var=var_array,
                                             method=method)
         to_history = [Path(i).name for i in files_list]
-        header["HISTORY"] = method + str(to_history)
+        header.add_history(method + str(to_history))
         if mask is not None:
             if varext is None:
                 result = masking_frame(result, mask)
@@ -367,8 +367,8 @@ def combine_process(files,
                 result, variance = masking_frame(result,
                                                  mask,
                                                  variance)
-            header["HISTORY"] = "Mask used: {}".format(mask)
-            header["HISTORY"] = "Interpolated bad pixels"
+            header.add_history("Mask used: {}".format(mask))
+            header.add_history("Interpolated bad pixels")
         if int(ext) == 0:
             hdul[0] = fits.PrimaryHDU(result, header=header)
         else:
