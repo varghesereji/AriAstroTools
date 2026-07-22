@@ -194,9 +194,9 @@ def operate_process(ip1, ip2,
         ext = int(ext)
         header = hdul[ext].header
         data1 = hdul1[ext].data
-        header['HISTORY'] = '{} {} {}'.format(Path(ip1).name,
-                                              operation,
-                                              Path(ip2).name)
+        header.add_history('{} {} {}'.format(Path(ip1).name,
+                                             operation,
+                                             Path(ip2).name))
         if varext is None:
             var1 = None
         else:
