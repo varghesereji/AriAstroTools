@@ -566,7 +566,7 @@ def remove_cosmic_rays(input_fname,
             crmask, cleararr = astroscrappy.detect_cosmics(inputimgdata,
                                                            inputvardata)
         header = fits.getheader(input_fname, ext=0)
-        header['HISTORY'] = "Cosmic Rays removed with astroscrappy"
+        header.add_history("Cosmic Rays removed with astroscrappy")
         if int(ext) == 0:
             hdul[0] = fits.PrimaryHDU(cleararr, header=header)
         else:
