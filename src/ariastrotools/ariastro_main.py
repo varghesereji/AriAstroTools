@@ -63,7 +63,6 @@ def main():
                             fluxext=args.flux,
                             varext=args.var,
                             wlext=args.wl)
-            
     elif args.mode == 'operation':
         file1, file2 = fnames
 

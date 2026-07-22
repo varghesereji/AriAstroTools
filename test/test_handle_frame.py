@@ -6,6 +6,7 @@ from skimage.registration import phase_cross_correlation
 from ariastrotools.handle_frame import remove_cosmic_rays
 from ariastrotools.handle_frame import shifting_frame
 
+
 @pytest.fixture
 def sample_fits(tmp_path):
     """Create a synthetic FITS file with cosmic-ray–like artifacts."""

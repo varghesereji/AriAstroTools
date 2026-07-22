@@ -415,9 +415,9 @@ def divide_smoothgradient(filename,
         List of extensions in the FITS file that contain the flux/image data
         to be normalized. Default is [0] (primary extension).
     varext : list of int, optional
-        List of extensions corresponding to variance maps for each flux extension.
-        If provided, the variance maps will also be normalized by the squared
-        smoothed gradient. Default is None.
+        List of extensions corresponding to variance maps for each flux
+        extension. If provided, the variance maps will also be normalized by
+        the squared smoothed gradient. Default is None.
 
     Notes
     -----
@@ -666,5 +666,5 @@ def shifting_frame(input_fname,
                               )
                 )
         hdul.writeto(opfilename, overwrite=True)
-                              
+
 # End

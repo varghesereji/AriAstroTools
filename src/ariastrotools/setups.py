@@ -29,7 +29,6 @@ def read_args():
                                choices=["+", "-", "*", "/"],
                                help="Binary operation (+,-,*,/)")
 
-
     # For combining
     combine_parser = subparsers.add_parser("combine", parents=[parent],
                                            help="Combine multiple data files")

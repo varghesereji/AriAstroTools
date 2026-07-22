@@ -84,6 +84,7 @@ def test_shrink_fits(tmp_path):
             for h in history
         )
 
+
 def test_shrink_fits_invalid_extension(tmp_path):
     """Requesting a non-existent extension should raise an error."""
 
