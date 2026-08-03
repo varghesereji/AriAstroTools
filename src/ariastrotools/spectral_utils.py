@@ -214,7 +214,7 @@ def combine_spectra(filesre="*.fits", directory=".",
         files_list = filesre
     elif isinstance(filesre, str):
         files_path = Path(directory)
-        files_list = files_path.glob(filesre)
+        files_list = list(files_path.glob(filesre))
     else:
         raise TypeError(
             "'files' must be either a list of filenames or a glob pattern."
