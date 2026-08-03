@@ -452,8 +452,8 @@ def divide_smoothgradient(filename,
     for index, ext in enumerate(fluxext):
         inputimgdata = fits.getdata(filename, ext=int(ext))
         inputimgdata = np.clip(inputimgdata, 1, np.max(inputimgdata+1))
-        print("Smoothing the frame")
-        print('It takes sometime (> 100 sec) to finish. Wait ...')
+        logger.info("Smoothing the frame")
+        logger.info('It takes sometime (> 100 sec) to finish. Wait ...')
         try:
             smoothGrad = filters.median_filter(inputimgdata,
                                                size=medsmoothsize)
