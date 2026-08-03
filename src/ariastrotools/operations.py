@@ -399,7 +399,6 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
     ... )
     """
     dictkeys = list(datadict.keys())
-    print(dictkeys)
     comb_dicts = datadict.copy()
 
     flux_keys = [dictkeys[int(i)] for i in dataext]
