@@ -282,7 +282,8 @@ def combine_spectra(filesre="*.fits", directory=".",
     combined_dict = combine_data_full(interp_data_dict, method=method,
                                       dataext=fluxext,
                                       varext=varext,
-                                      extras=extra)
+                                      extras=extra,
+                                      table_info=tables)
     # print(combined_dict)
     dict_keys = list(headerdict_main.keys())
 
