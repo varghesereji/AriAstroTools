@@ -203,6 +203,7 @@ def combine_spectra(filesre="*.fits", directory=".",
                     fluxext=(1, 2, 3),
                     varext=(4, 5, 6),
                     wlext=(7, 8, 9),
+                    extra=(12),
                     req_qtys=None):
     '''
     Function to combine spectra.
@@ -233,6 +234,7 @@ def combine_spectra(filesre="*.fits", directory=".",
             telluric_corr = instname_list[1].lower() == 'tel'
         instrument = instrument_dict[instrumentname]()
         fluxext, varext, wlext, extra = instrument.fits_extensions()
+        print(extra, "extra")
     req_qtys_dict = defaultdict(list)
     req_qtys_dict_fullext = {}
     for cro, specfile in enumerate(files_list):
@@ -276,9 +278,11 @@ def combine_spectra(filesre="*.fits", directory=".",
                     qty_method = method
                 comb_qty = combine_data(value, method=qty_method)
                 headerdict_main[extname][qty] = comb_qty[0]
+    print('extra', extra)
     combined_dict = combine_data_full(interp_data_dict, method=method,
                                       dataext=fluxext,
-                                      varext=varext)
+                                      varext=varext,
+                                      extras=extra)
     # print(combined_dict)
     dict_keys = list(headerdict_main.keys())
 
