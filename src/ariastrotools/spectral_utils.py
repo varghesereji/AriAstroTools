@@ -201,15 +201,94 @@ def combine_spectra(filesre="*.fits", directory=".",
                     wlext=(7, 8, 9),
                     extra=(12),
                     req_qtys=None):
-    '''
-    Function to combine spectra.
-    Input
-    -------
-    filesre: Regular expression for the files.
-    directory: data directory.
-    fluxext: extension for flux array.
-    '''
+    """
+    Combine multiple spectra into a single FITS file.
 
+    This function reads a collection of spectra, optionally performs
+    instrument-specific preprocessing, interpolates the spectra onto a
+    common wavelength grid, combines them using the specified method,
+    and writes the combined spectra to a FITS file.
+
+    Parameters
+    ----------
+    filesre : list of str or str, optional
+        Input spectra. This may be either:
+
+        - A list of FITS filenames.
+        - A glob pattern used to select FITS files within ``directory``.
+
+        The default is ``"*.fits"``.
+
+    directory : str or pathlib.Path, optional
+        Directory containing the input FITS files when ``filesre`` is
+        given as a glob pattern. The default is ``"."``.
+
+    opfilename : str or pathlib.Path, optional
+        Name of the output FITS file. The default is
+        ``"Comb_spectra.fits"``.
+
+    instrumentname : str or None, optional
+        Name of the instrument used for instrument-specific processing.
+        If the name ends with ``"_tel"``, telluric correction is applied
+        before combining the spectra. If ``None``, all FITS extensions
+        are read directly. The default is ``None``.
+
+    method : str, optional
+        Method used to combine the spectra. This value is passed
+        directly to ``combine_data_full``. The default is ``"mean"``.
+
+    fluxext : tuple of int, optional
+        FITS extensions containing flux data. Ignored when
+        ``instrumentname`` is provided. The default is ``(1, 2, 3)``.
+
+    varext : tuple of int, optional
+        FITS extensions containing variance data corresponding to
+        ``fluxext``. Ignored when ``instrumentname`` is provided. The
+        default is ``(4, 5, 6)``.
+
+    wlext : tuple of int, optional
+        FITS extensions containing wavelength data. Ignored when
+        ``instrumentname`` is provided. The default is ``(7, 8, 9)``.
+
+    extra : tuple of int, optional
+        Additional FITS extensions to include in the output without
+        combination. Ignored when ``instrumentname`` is provided. The
+        default is ``(12,)``.
+
+    req_qtys : dict or None, optional
+        Dictionary specifying header quantities to combine. If
+        ``None``, instrument-specific defaults are used when available.
+        The default is ``None``.
+
+    Raises
+    ------
+    TypeError
+        If ``filesre`` is neither a list of filenames nor a glob
+        pattern.
+
+    Notes
+    -----
+    If ``instrumentname`` is provided, the instrument definition
+    determines the FITS extensions used and the data extraction
+    procedure. The output FITS file is written using ``create_fits``.
+
+    Examples
+    --------
+    Combine all FITS files in the current directory::
+
+        >>> combine_spectra(
+        ...     filesre="*.fits",
+        ...     opfilename="combined.fits",
+        ... )
+
+    Combine spectra using an instrument definition::
+
+        >>> combine_spectra(
+        ...     filesre="*.fits",
+        ...     instrumentname="NEID",
+        ...     method="median",
+        ... )
+    """
     if isinstance(filesre, list):
         files_list = filesre
     elif isinstance(filesre, str):
