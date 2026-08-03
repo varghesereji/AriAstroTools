@@ -226,30 +226,78 @@ def weighted_mean_and_variance(values, variances):
     return mean, variance_of_mean
 
 
-def combine_bintable(dataarr, method='mean'):
+def combine_bintable(dataarr,
+                     value_cols=None,
+                     uncertainity_cols=None,
+                     combine_cols=None,
+                     method='mean'):
+
+    if value_cols is None:
+        value_cols = []
+
+    if uncertainity_cols is None:
+        uncertainity_cols = []
+
+    if combine_cols is None:
+        combine_cols = []
+
+    if len(value_cols) != len(uncertainity_cols):
+        raise ValueError(
+            "'value_cols' and 'uncertainity_cols' must have the same length"
+            )
+
     tables = [Table(t) if not isinstance(t, Table) else t
               for t in dataarr]
+
     ref = tables[0]
     comb = ref.copy(copy_data=True)
 
-    for col in ref.colnames:
-        dtype = ref[col].dtype
-        if np.issubdtype(dtype, np.number):
-            values = np.stack([t[col] for t in tables])
+    handled = set()
 
-            comb[col], _ = combine_data(values, method=method)
-        else:
-            for table in tables[1:]:
-                if not np.array_equal(ref[col], table[col]):
-                    raise ValueError(
-                        f"Column '{col}' differs between tables."
-                        )
+    # Combine quantities with propagated uncertainities
+    for value_col, err_col in zip(value_cols, uncertainity_cols):
+
+        values = np.stack([t[value_col] for t in tables])
+        var = np.stack([t[err_col]**2 for t in tables])
+
+        comb[value_col], comb_var = combine_data(
+            values,
+            var=var,
+            method=method
+            )
+        comb[err_col] = np.sqrt(comb_var)
+        handled.update([value_col, err_col])
+
+    # Combine quantities without uncertainities
+    for col in combine_cols:
+
+        values = np.stack([t[col] for t in tables])
+
+        comb[col], _ = combine_data(
+            values,
+            method=method
+            )
+        handled.add(col)
+
+    # Verify all remaining columns are identical
+    for col in ref.colnames:
+
+        if col in handled:
+            continue
+
+        for table in tables[1:]:
+            if not np.array_equal(ref[col], table[col]):
+                raise ValueError(
+                    f"Column '{col}' differs between tables."
+                    )
+
     return comb, None
 
 
 def combine_data_full(datadict, dataext=[1, 2, 3],
                       varext=[4, 5, 6],
                       extras=[],
+                      tables=[],
                       method='mean'):
     """
     Combine flux and variance data from multiple FITS files into a single
@@ -276,6 +324,11 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
     extras : list of int, optional
         Indices of ``datadict.keys()`` other than flux or variance that
         needed to be combined.
+        Default is ``[]``.
+    tables : list of int, optional
+        Indices of ``datadict.keys()`` of tables which are needed to
+        combine.
+    table
         Default is ``[]``.
 
     method : {'mean', 'median', 'biweight'}, optional
@@ -357,6 +410,7 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
 
         comb_dicts[flux_keys[index]] = comb_flux
         comb_dicts[var_keys[index]] = comb_var
+
     print("Combining extras", extra_keys)
     for index, ext in enumerate(extra_keys):
         data = comb_dicts[ext]
