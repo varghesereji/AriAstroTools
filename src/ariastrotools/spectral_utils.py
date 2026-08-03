@@ -216,8 +216,9 @@ def combine_spectra(filesre="*.fits", directory=".",
         files_path = Path(directory)
         files_list = files_path.glob(filesre)
     else:
-        print("Enter either files list or the regular expression")
-        return
+        raise TypeError(
+            "'files' must be either a list of filenames or a glob pattern."
+         )
 
     data_dict = defaultdict(list)
     headerdict_main = None
