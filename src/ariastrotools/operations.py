@@ -303,7 +303,7 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
     # print("comb data full", np.array(datadict["SCIFLUX"]).shape)
     flux_keys = [dictkeys[int(i)] for i in dataext]
     var_keys = [dictkeys[int(i)] for i in varext]
-    if len(extras) > 1:
+    if len(extras) > 0:
         extra_keys = [dictkeys[int(i)] for i in extras]
     else:
         extra_keys = []
@@ -316,9 +316,9 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
     # same array. So, that also
     # copied in the same way.
     for cro, keys in enumerate(dictkeys):
-        print(keys, flux_keys, var_keys)
+        # print(keys, flux_keys, var_keys)
         if keys not in flux_keys + var_keys + extra_keys:
-            print('keys', keys)
+            # print('keys', keys)
             comb_dicts[keys] = comb_dicts[keys][0]
     # Doing for flux and variance.
     for index, extk in enumerate(flux_keys):
@@ -329,7 +329,7 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
 
         comb_dicts[flux_keys[index]] = comb_flux
         comb_dicts[var_keys[index]] = comb_var
-    print("Combining extras")
+    print("Combining extras", extra_keys)
     for index, ext in enumerate(extra_keys):
         print(extra_keys)
         data = comb_dicts[ext]
