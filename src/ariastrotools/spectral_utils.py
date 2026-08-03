@@ -44,7 +44,6 @@ def interpolation_spectra(fulldata, fluxext, wlext, varext):
         header_wl = keys[int(wext)]
         header_fl = keys[fext]
         header_va = keys[vext]
-        # print(header_wl, header_fl, header_va)
 
         flux_data = np.array(fulldata[header_fl])
         wl_data = np.array(fulldata[header_wl])
@@ -55,10 +54,10 @@ def interpolation_spectra(fulldata, fluxext, wlext, varext):
             header_wl, header_fl, header_va))
 
         ref_wl = wl_data[0]
-        # print(np.size(wl_data))
+
         for epoin, epodata in enumerate(wl_data):
             # Goint through each epoch
-            # print("Epoch", epoin)
+
             # logger.info("Epoch {}".format(epoin))
             epoch_flux = flux_data[epoin]
             epoch_wl = wl_data[epoin]
@@ -66,13 +65,10 @@ def interpolation_spectra(fulldata, fluxext, wlext, varext):
 
             for order, wl_order in enumerate(epoch_wl):
                 # Goint through each order of the epoch
-                # print(order, '==========================')
+
                 # logger.info("order {}".format(order))
                 fl_order = epoch_flux[order]
                 var_order = epoch_var[order]
-                # plt.figure()
-                # plt.plot(wl_order, fl_order, 'o-')
-                # plt.show()
                 data_nanmask = np.isnan(fl_order) | np.isnan(var_order) \
                     | np.isinf(fl_order) | np.isinf(var_order)
                 wl_zeros = wl_order < 3000
@@ -94,7 +90,7 @@ def interpolation_spectra(fulldata, fluxext, wlext, varext):
 
                 epoch_flux[order] = fl_order
                 epoch_var[order] = var_order
-                # print("Ref wl", ref_wl[order
+
                 epoch_wl[order] = ref_wl[order]
             flux_data[epoin] = epoch_flux
             wl_data[epoin] = epoch_wl
@@ -161,7 +157,7 @@ def continuum_normalize(datadict, flux_exts=[1],
     dict_keys = list(datadict.keys())
 
     for n, ext in enumerate(flux_exts):
-        # n = 0
+
         flux_key = dict_keys[flux_exts[n]]
         var_key = dict_keys[var_exts[n]]
         wl_key = dict_keys[wl_exts[n]]
@@ -205,23 +201,103 @@ def combine_spectra(filesre="*.fits", directory=".",
                     wlext=(7, 8, 9),
                     extra=(12),
                     req_qtys=None):
-    '''
-    Function to combine spectra.
-    Input
-    -------
-    filesre: Regular expression for the files.
-    directory: data directory.
-    fluxext: extension for flux array.
-    '''
-    print(filesre)
+    """
+    Combine multiple spectra into a single FITS file.
+
+    This function reads a collection of spectra, optionally performs
+    instrument-specific preprocessing, interpolates the spectra onto a
+    common wavelength grid, combines them using the specified method,
+    and writes the combined spectra to a FITS file.
+
+    Parameters
+    ----------
+    filesre : list of str or str, optional
+        Input spectra. This may be either:
+
+        - A list of FITS filenames.
+        - A glob pattern used to select FITS files within ``directory``.
+
+        The default is ``"*.fits"``.
+
+    directory : str or pathlib.Path, optional
+        Directory containing the input FITS files when ``filesre`` is
+        given as a glob pattern. The default is ``"."``.
+
+    opfilename : str or pathlib.Path, optional
+        Name of the output FITS file. The default is
+        ``"Comb_spectra.fits"``.
+
+    instrumentname : str or None, optional
+        Name of the instrument used for instrument-specific processing.
+        If the name ends with ``"_tel"``, telluric correction is applied
+        before combining the spectra. If ``None``, all FITS extensions
+        are read directly. The default is ``None``.
+
+    method : str, optional
+        Method used to combine the spectra. This value is passed
+        directly to ``combine_data_full``. The default is ``"mean"``.
+
+    fluxext : tuple of int, optional
+        FITS extensions containing flux data. Ignored when
+        ``instrumentname`` is provided. The default is ``(1, 2, 3)``.
+
+    varext : tuple of int, optional
+        FITS extensions containing variance data corresponding to
+        ``fluxext``. Ignored when ``instrumentname`` is provided. The
+        default is ``(4, 5, 6)``.
+
+    wlext : tuple of int, optional
+        FITS extensions containing wavelength data. Ignored when
+        ``instrumentname`` is provided. The default is ``(7, 8, 9)``.
+
+    extra : tuple of int, optional
+        Additional FITS extensions to include in the output without
+        combination. Ignored when ``instrumentname`` is provided. The
+        default is ``(12,)``.
+
+    req_qtys : dict or None, optional
+        Dictionary specifying header quantities to combine. If
+        ``None``, instrument-specific defaults are used when available.
+        The default is ``None``.
+
+    Raises
+    ------
+    TypeError
+        If ``filesre`` is neither a list of filenames nor a glob
+        pattern.
+
+    Notes
+    -----
+    If ``instrumentname`` is provided, the instrument definition
+    determines the FITS extensions used and the data extraction
+    procedure. The output FITS file is written using ``create_fits``.
+
+    Examples
+    --------
+    Combine all FITS files in the current directory::
+
+        >>> combine_spectra(
+        ...     filesre="*.fits",
+        ...     opfilename="combined.fits",
+        ... )
+
+    Combine spectra using an instrument definition::
+
+        >>> combine_spectra(
+        ...     filesre="*.fits",
+        ...     instrumentname="NEID",
+        ...     method="median",
+        ... )
+    """
     if isinstance(filesre, list):
         files_list = filesre
     elif isinstance(filesre, str):
         files_path = Path(directory)
-        files_list = files_path.glob(filesre)
+        files_list = list(files_path.glob(filesre))
     else:
-        print("Enter either files list or the regular expression")
-        return
+        raise TypeError(
+            "'files' must be either a list of filenames or a glob pattern."
+         )
 
     data_dict = defaultdict(list)
     headerdict_main = None
@@ -234,7 +310,7 @@ def combine_spectra(filesre="*.fits", directory=".",
             telluric_corr = instname_list[1].lower() == 'tel'
         instrument = instrument_dict[instrumentname]()
         fluxext, varext, wlext, extra, tables = instrument.fits_extensions()
-        print(extra, "extra")
+
     req_qtys_dict = defaultdict(list)
     req_qtys_dict_fullext = {}
     for cro, specfile in enumerate(files_list):
@@ -259,18 +335,18 @@ def combine_spectra(filesre="*.fits", directory=".",
                         continue
                     req_qtys_dict[qty].append(header_qty)
                 req_qtys_dict_fullext[extname] = req_qtys_dict
-        # print(req_qtys_dict)
+
         if headerdict_main is None:
             headerdict_main = headerdict
 
         for hduname, data in datadict.items():
             data_dict[hduname].append(data)
-    # print("data_dict", np.array(data_dict["SCIWAVE"])[:, 50])
+
     interp_data_dict = interpolation_spectra(data_dict, fluxext, wlext, varext)
-    # print(req_qtys_dict_fullext)
+
     if req_qtys is not None:
         for extname, qtys in req_qtys_dict_fullext.items():
-            # print(extname, qtys)
+
             for qty, value in qtys.items():
                 if method == 'weightedavg':
                     qty_method = 'mean'
@@ -278,13 +354,13 @@ def combine_spectra(filesre="*.fits", directory=".",
                     qty_method = method
                 comb_qty = combine_data(value, method=qty_method)
                 headerdict_main[extname][qty] = comb_qty[0]
-    print('extra', extra)
+
     combined_dict = combine_data_full(interp_data_dict, method=method,
                                       dataext=fluxext,
                                       varext=varext,
                                       extras=extra,
                                       table_info=tables)
-    # print(combined_dict)
+
     dict_keys = list(headerdict_main.keys())
 
     headerdict_main[dict_keys[0]]['HISTORY'] = "{} {}".format(method,
@@ -293,9 +369,8 @@ def combine_spectra(filesre="*.fits", directory=".",
     logger.info("Combining spectra")
     create_fits(combined_dict, headerdict_main,
                 filename=Path(directory) / opfilename)
-    logger.info("Combined spectra")
-    # print(header_dict)
+    logger.info("Spectral combination DONE.")
+
     del data_dict
-    # print(np.array(flux).shape)
 
 # End

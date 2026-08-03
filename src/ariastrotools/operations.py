@@ -4,6 +4,7 @@ from astropy.stats import biweight_location
 from astropy.table import Table
 from astropy.io.fits.fitsrec import FITS_rec
 
+from .logger import logger
 
 '''
 Mathematical operations
@@ -399,9 +400,8 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
     ... )
     """
     dictkeys = list(datadict.keys())
-    print(dictkeys)
     comb_dicts = datadict.copy()
-    # print("comb data full", np.array(datadict["SCIFLUX"]).shape)
+
     flux_keys = [dictkeys[int(i)] for i in dataext]
     var_keys = [dictkeys[int(i)] for i in varext]
     if len(extras) > 0:
@@ -419,12 +419,14 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
     # same array. So, that also
     # copied in the same way.
     for cro, keys in enumerate(dictkeys):
-        # print(keys, flux_keys, var_keys)
+
         if keys not in flux_keys + var_keys + extra_keys + table_keys:
-            # print('keys', keys)
+
             comb_dicts[keys] = comb_dicts[keys][0]
     # Doing for flux and variance.
     for index, extk in enumerate(flux_keys):
+        logger.info("Operation on %s", flux_keys[index])
+        logger.info("With variance in %s", var_keys[index])
         fluxes = comb_dicts[flux_keys[index]]
         variances = comb_dicts[var_keys[index]]
         comb_flux, comb_var = combine_data(fluxes, variances,
@@ -435,12 +437,14 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
 
     for index, ext in enumerate(extra_keys):
         data = comb_dicts[ext]
+        logger.info("Operation on %s", ext)
         comb_data, _ = combine_data(data,
                                     method=method)
         comb_dicts[ext] = comb_data
     if table_info is not None:
         for extnum, info in table_info.items():
             key = dictkeys[extnum]
+            logger.info("Table operation on %s", key)
             comb_table, _ = combine_bintable(
                 comb_dicts[key],
                 value_cols=info.get("value_cols", []),
@@ -450,8 +454,7 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
             )
 
             comb_dicts[key] = comb_table
-    # print(datadict[flux_keys[0]].shape)
-    # print(comb_dicts)
+
     return comb_dicts
 
 # End

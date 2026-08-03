@@ -196,37 +196,32 @@ class Handle_NEID:
             keywords.
         """
         datadict, headerdict = self.getfull_data(fname)
-        # print(datadict)
 
         sci_ext = [1, 2, 3]
         var_ext = [4, 5, 6]
         wl_ext = [7, 8, 9]
-        # blaze_ext = [15, 16, 17]
+
         header_kws = list(datadict.keys())
-        # print(header_kws)
+
         for n, ext in enumerate(sci_ext):
 
             flux_kw = header_kws[sci_ext[n]]
             var_kw = header_kws[var_ext[n]]
             wl_kw = header_kws[wl_ext[n]]
-            # blaze_kw = header_kws[blaze_ext[n]]
-            # print(flux_kw, var_kw, wl_kw, blaze_kw)
 
             flux = datadict[flux_kw].astype(np.float64)
             var = datadict[var_kw].astype(np.float64)
             wl = datadict[wl_kw].astype(np.float64)
-            # blaze = datadict[blaze_kw].astype(np.float64)
+
             header_ext = headerdict[header_kws[0]]
-            # print(header_ext)
+
             corr_wl, corr_header = self.barycorr(wl, header_ext)
             headerdict[header_kws[0]] = corr_header
-            # newblaze = np.ones(blaze.shape)
-            # corr_flux = flux / blaze
-            # corr_var = var / blaze ** 2
+
             datadict[flux_kw] = flux
             datadict[var_kw] = var
             datadict[wl_kw] = corr_wl
-            # datadict[blaze_kw] = newblaze
+
         if contnorm:
             from .spectral_utils import continuum_normalize
             datadict = continuum_normalize(datadict, sci_ext, var_ext, wl_ext)

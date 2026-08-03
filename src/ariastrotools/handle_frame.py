@@ -254,9 +254,10 @@ def combine_process(files,
     Parameters
     ----------
     files : list of str or str
-        Input FITS files. Can be:
+        Input FITS files. May be either:
 
         - A list of FITS file paths.
+        - A glob pattern used to match FITS files within ``path``.
         - A string specifying a pattern/regular expression to match files in
           `path`.
 
@@ -290,15 +291,24 @@ def combine_process(files,
     None
         The combined FITS data is written directly to `opfilename`.
 
+    Raises
+    ------
+    TypeError
+        If ``files`` is neither a list of filenames nor a glob pattern.
+
+    FileNotFoundError
+        If ``files`` is given as a glob pattern and no matching files are
+        found in ``path``.
+
     Notes
     -----
     - If `instrument` is not `None`, this function delegates to
       `combine_spectra` and returns immediately.
-    - The combination of data is handled by `combine_data`, which is expected
-      to return `(result, variance)`.
-    - The variance extension in the output file is only written if
-      `varext` is provided.
-    - The primary HDU (extension 0) is replaced if `fluxext` includes 0.
+    - Input data are combined using ``combine_data``
+    - Variance extensions are processed only if ``varext`` is provided.
+    - If ``mask`` is supplied, bad pixels are masked or interpolated
+      using ``masking_frame`` before the output is written.
+    - The primary HDU is replaced when ``fluxext`` contains extension 0.
 
     Examples
     --------
@@ -331,13 +341,15 @@ def combine_process(files,
         files_list = files
     elif isinstance(files, str):
         files_path = Path(path)
-        files_list = files_path.glob(files)
+        files_list = list(files_path.glob(files))
         if not files_list:
             raise FileNotFoundError(
                 f"No files found matching {files} in {path}"
             )
     else:
-        print("Enter either files list or the regular expression")
+        raise TypeError(
+            "'files must be either a list of filenames or a glob pattern."
+        )
 
     for index, ext in enumerate(fluxext):
         ext = int(ext)
@@ -450,15 +462,19 @@ def divide_smoothgradient(filename,
     for index, ext in enumerate(fluxext):
         inputimgdata = fits.getdata(filename, ext=int(ext))
         inputimgdata = np.clip(inputimgdata, 1, np.max(inputimgdata+1))
-        print("Smoothing the frame")
-        print('It takes sometime (> 100 sec) to finish. Wait ...')
+        logger.info("Applying median filter with size %s", medsmoothsize)
+        logger.info('It takes sometime (> 100 sec) to finish. Wait ...')
         try:
             smoothGrad = filters.median_filter(inputimgdata,
                                                size=medsmoothsize)
 
         except MemoryError:
-            print("*** MEMORY ERROR : Skipping median filter Division ***")
-            print("Try giving a smaller smooth size for medial filtter insted")
+            logger.error(
+                "Skipping extension %d because median filtering "
+                "ran out of memory.",
+                ext,
+                )
+            continue
         else:
             header = fits.getheader(filename, ext=0)
             NormContdata = inputimgdata / smoothGrad
