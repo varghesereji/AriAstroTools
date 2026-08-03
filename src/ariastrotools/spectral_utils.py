@@ -252,7 +252,10 @@ def combine_spectra(filesre="*.fits", directory=".",
         if req_qtys is not None:
             for extname, qtys in req_qtys.items():
                 for qty in qtys:
-                    req_qtys_dict[qty].append(headerdict[extname][qty])
+                    header_qty = headerdict[extname][qty]
+                    if header_qty is None:
+                        continue
+                    req_qtys_dict[qty].append(header_qty)
                 req_qtys_dict_fullext[extname] = req_qtys_dict
         # print(req_qtys_dict)
         if headerdict_main is None:
