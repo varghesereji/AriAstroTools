@@ -274,7 +274,7 @@ def combine_spectra(filesre="*.fits", directory=".",
                     qty_method = method
                 comb_qty = combine_data(value, method=qty_method)
                 headerdict_main[extname][qty] = comb_qty[0]
-    print('extra', extra)
+
     combined_dict = combine_data_full(interp_data_dict, method=method,
                                       dataext=fluxext,
                                       varext=varext,
