@@ -1,6 +1,8 @@
 # The functions to perform mathematical operations
 import numpy as np
 from astropy.stats import biweight_location
+from astropy.table import Table
+from astropy.io.fits.fitsrec import FITS_rec
 
 
 '''
@@ -131,6 +133,11 @@ def combine_data(dataarr, var=None, method='mean',
     - The biweight method is less sensitive to outliers than the mean
       or median.
     """
+
+    # Handle binary tables
+    if len(dataarr) > 0 and isinstance(dataarr[0], (FITS_rec, Table)):
+        return combine_bintable(dataarr, method=method)
+
     if method == 'weightedavg':
         comb_data, comb_var = weighted_mean_and_variance(dataarr, var)
         return comb_data, comb_var
@@ -217,6 +224,27 @@ def weighted_mean_and_variance(values, variances):
     variance_of_mean = 1.0 / np.sum(weights, axis=0)
 
     return mean, variance_of_mean
+
+
+def combine_bintable(dataarr, method='mean'):
+    tables = [Table(t) if not isinstance(t, Table) else t
+              for t in dataarr]
+    ref = tables[0]
+    comb = ref.copy(copy_data=True)
+
+    for col in ref.colnames:
+        dtype = ref[col].dtype
+        if np.issubdtype(dtype, np.number):
+            values = np.stack([t[col] for t in tables])
+
+            comb[col], _ = combine_data(values, method=method)
+        else:
+            for table in tables[1:]:
+                if not np.array_equal(ref[col], table[col]):
+                    raise ValueError(
+                        f"Column '{col}' differs between tables."
+                        )
+    return comb, None
 
 
 def combine_data_full(datadict, dataext=[1, 2, 3],
@@ -331,7 +359,6 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
         comb_dicts[var_keys[index]] = comb_var
     print("Combining extras", extra_keys)
     for index, ext in enumerate(extra_keys):
-        print(extra_keys)
         data = comb_dicts[ext]
         comb_data, _ = combine_data(data,
                                     method=method)
