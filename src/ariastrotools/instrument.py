@@ -227,6 +227,13 @@ class Handle_NEID:
         {Name of extension: List of keys from that extension}
         """
         qty = {'CCFS': ['CCFRVMOD', 'BISMOD', 'FWHMMOD']}
+        for order in range(52, 174, 1):
+            key = "CCFRV"
+            if order < 100:
+                key_order = key + "0" + str(order)
+            else:
+                key_order = key + str(order)
+            qty['CCFS'].append(key_order)
         return qty
 
 
