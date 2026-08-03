@@ -233,7 +233,7 @@ def combine_spectra(filesre="*.fits", directory=".",
         if len(instname_list) > 1:
             telluric_corr = instname_list[1].lower() == 'tel'
         instrument = instrument_dict[instrumentname]()
-        fluxext, varext, wlext, extra = instrument.fits_extensions()
+        fluxext, varext, wlext, extra, tables = instrument.fits_extensions()
         print(extra, "extra")
     req_qtys_dict = defaultdict(list)
     req_qtys_dict_fullext = {}
