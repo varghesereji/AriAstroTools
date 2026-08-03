@@ -337,7 +337,9 @@ def combine_process(files,
                 f"No files found matching {files} in {path}"
             )
     else:
-        print("Enter either files list or the regular expression")
+        raise TypeError(
+            "'files must be either a list of filenames or a glob pattern."
+        )
 
     for index, ext in enumerate(fluxext):
         ext = int(ext)
