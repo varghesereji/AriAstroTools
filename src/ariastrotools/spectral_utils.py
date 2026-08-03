@@ -289,7 +289,7 @@ def combine_spectra(filesre="*.fits", directory=".",
     logger.info("Combining spectra")
     create_fits(combined_dict, headerdict_main,
                 filename=Path(directory) / opfilename)
-    logger.info("Combined spectra")
+    logger.info("Spectral combination DONE.")
 
     del data_dict
 
