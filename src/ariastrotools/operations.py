@@ -297,7 +297,7 @@ def combine_bintable(dataarr,
 def combine_data_full(datadict, dataext=[1, 2, 3],
                       varext=[4, 5, 6],
                       extras=[],
-                      tables=[],
+                      table_info=None,
                       method='mean'):
     """
     Combine flux and variance data from multiple FITS files into a single
@@ -417,6 +417,19 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
         comb_data, _ = combine_data(data,
                                     method=method)
         comb_dicts[ext] = comb_data
+
+    for extnum, info in table_info.items():
+        key = dictkeys[extnum]
+        print("combining", key)
+        comb_table, _ = combine_bintable(
+            comb_dicts[key],
+            value_cols=info.get("value_cols", []),
+            uncertainty_cols=info.get("uncertainty_cols", []),
+            combine_cols=info.get("combine_cols", []),
+            method=method,
+        )
+
+        comb_dicts[key] = comb_table
     # print(datadict[flux_keys[0]].shape)
     # print(comb_dicts)
     return comb_dicts
