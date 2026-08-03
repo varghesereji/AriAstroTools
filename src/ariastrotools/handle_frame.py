@@ -341,7 +341,7 @@ def combine_process(files,
         files_list = files
     elif isinstance(files, str):
         files_path = Path(path)
-        files_list = files_path.glob(files)
+        files_list = list(files_path.glob(files))
         if not files_list:
             raise FileNotFoundError(
                 f"No files found matching {files} in {path}"
