@@ -389,6 +389,8 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
     else:
         extra_keys = []
 
+    table_keys = [dictkeys[i] for i in table_info] if table_info else []
+
     # Avoiding the extensions that are not flux or variance.
     # Taking only the first element of that. i.e.,
     # The data from first fits file will
@@ -398,7 +400,7 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
     # copied in the same way.
     for cro, keys in enumerate(dictkeys):
         # print(keys, flux_keys, var_keys)
-        if keys not in flux_keys + var_keys + extra_keys:
+        if keys not in flux_keys + var_keys + extra_keys + table_keys:
             # print('keys', keys)
             comb_dicts[keys] = comb_dicts[keys][0]
     # Doing for flux and variance.
@@ -411,7 +413,6 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
         comb_dicts[flux_keys[index]] = comb_flux
         comb_dicts[var_keys[index]] = comb_var
 
-    print("Combining extras", extra_keys)
     for index, ext in enumerate(extra_keys):
         data = comb_dicts[ext]
         comb_data, _ = combine_data(data,
@@ -420,11 +421,10 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
 
     for extnum, info in table_info.items():
         key = dictkeys[extnum]
-        print("combining", key)
         comb_table, _ = combine_bintable(
             comb_dicts[key],
             value_cols=info.get("value_cols", []),
-            uncertainty_cols=info.get("uncertainty_cols", []),
+            uncertainity_cols=info.get("uncertainty_cols", []),
             combine_cols=info.get("combine_cols", []),
             method=method,
         )
