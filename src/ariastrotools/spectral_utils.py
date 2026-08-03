@@ -209,7 +209,7 @@ def combine_spectra(filesre="*.fits", directory=".",
     directory: data directory.
     fluxext: extension for flux array.
     '''
-    print(filesre)
+
     if isinstance(filesre, list):
         files_list = filesre
     elif isinstance(filesre, str):
