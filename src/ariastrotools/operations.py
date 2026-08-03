@@ -221,7 +221,7 @@ def weighted_mean_and_variance(values, variances):
 
 def combine_data_full(datadict, dataext=[1, 2, 3],
                       varext=[4, 5, 6],
-                      extras=None,
+                      extras=[],
                       method='mean'):
     """
     Combine flux and variance data from multiple FITS files into a single
@@ -248,7 +248,7 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
     extras : list of int, optional
         Indices of ``datadict.keys()`` other than flux or variance that
         needed to be combined.
-        Default is None
+        Default is ``[]``.
 
     method : {'mean', 'median', 'biweight'}, optional
         Method used to combine the fluxes and variances.
@@ -303,6 +303,10 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
     # print("comb data full", np.array(datadict["SCIFLUX"]).shape)
     flux_keys = [dictkeys[int(i)] for i in dataext]
     var_keys = [dictkeys[int(i)] for i in varext]
+    if len(extras) > 1:
+        extra_keys = [dictkeys[int(i)] for i in extras]
+    else:
+        extra_keys = []
 
     # Avoiding the extensions that are not flux or variance.
     # Taking only the first element of that. i.e.,
@@ -313,7 +317,7 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
     # copied in the same way.
     for cro, keys in enumerate(dictkeys):
         print(keys, flux_keys, var_keys)
-        if keys not in flux_keys + var_keys:
+        if keys not in flux_keys + var_keys + extra_keys:
             print('keys', keys)
             comb_dicts[keys] = comb_dicts[keys][0]
     # Doing for flux and variance.
@@ -325,6 +329,13 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
 
         comb_dicts[flux_keys[index]] = comb_flux
         comb_dicts[var_keys[index]] = comb_var
+    print("Combining extras")
+    for index, ext in enumerate(extra_keys):
+        print(extra_keys)
+        data = comb_dicts[ext]
+        comb_data, _ = combine_data(data,
+                                    method=method)
+        comb_dicts[ext] = comb_data
     # print(datadict[flux_keys[0]].shape)
     # print(comb_dicts)
     return comb_dicts
