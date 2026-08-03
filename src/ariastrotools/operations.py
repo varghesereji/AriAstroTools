@@ -4,6 +4,7 @@ from astropy.stats import biweight_location
 from astropy.table import Table
 from astropy.io.fits.fitsrec import FITS_rec
 
+from .logger import logger
 
 '''
 Mathematical operations
@@ -424,6 +425,8 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
             comb_dicts[keys] = comb_dicts[keys][0]
     # Doing for flux and variance.
     for index, extk in enumerate(flux_keys):
+        logger.info("Operation on %s", flux_keys[index])
+        logger.info("With variance in %s", var_keys[index])
         fluxes = comb_dicts[flux_keys[index]]
         variances = comb_dicts[var_keys[index]]
         comb_flux, comb_var = combine_data(fluxes, variances,
