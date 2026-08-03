@@ -44,7 +44,6 @@ def interpolation_spectra(fulldata, fluxext, wlext, varext):
         header_wl = keys[int(wext)]
         header_fl = keys[fext]
         header_va = keys[vext]
-        # print(header_wl, header_fl, header_va)
 
         flux_data = np.array(fulldata[header_fl])
         wl_data = np.array(fulldata[header_wl])
@@ -55,10 +54,10 @@ def interpolation_spectra(fulldata, fluxext, wlext, varext):
             header_wl, header_fl, header_va))
 
         ref_wl = wl_data[0]
-        # print(np.size(wl_data))
+
         for epoin, epodata in enumerate(wl_data):
             # Goint through each epoch
-            # print("Epoch", epoin)
+
             # logger.info("Epoch {}".format(epoin))
             epoch_flux = flux_data[epoin]
             epoch_wl = wl_data[epoin]
@@ -66,13 +65,10 @@ def interpolation_spectra(fulldata, fluxext, wlext, varext):
 
             for order, wl_order in enumerate(epoch_wl):
                 # Goint through each order of the epoch
-                # print(order, '==========================')
+
                 # logger.info("order {}".format(order))
                 fl_order = epoch_flux[order]
                 var_order = epoch_var[order]
-                # plt.figure()
-                # plt.plot(wl_order, fl_order, 'o-')
-                # plt.show()
                 data_nanmask = np.isnan(fl_order) | np.isnan(var_order) \
                     | np.isinf(fl_order) | np.isinf(var_order)
                 wl_zeros = wl_order < 3000
@@ -94,7 +90,7 @@ def interpolation_spectra(fulldata, fluxext, wlext, varext):
 
                 epoch_flux[order] = fl_order
                 epoch_var[order] = var_order
-                # print("Ref wl", ref_wl[order
+
                 epoch_wl[order] = ref_wl[order]
             flux_data[epoin] = epoch_flux
             wl_data[epoin] = epoch_wl
@@ -161,7 +157,7 @@ def continuum_normalize(datadict, flux_exts=[1],
     dict_keys = list(datadict.keys())
 
     for n, ext in enumerate(flux_exts):
-        # n = 0
+
         flux_key = dict_keys[flux_exts[n]]
         var_key = dict_keys[var_exts[n]]
         wl_key = dict_keys[wl_exts[n]]
@@ -259,18 +255,18 @@ def combine_spectra(filesre="*.fits", directory=".",
                         continue
                     req_qtys_dict[qty].append(header_qty)
                 req_qtys_dict_fullext[extname] = req_qtys_dict
-        # print(req_qtys_dict)
+
         if headerdict_main is None:
             headerdict_main = headerdict
 
         for hduname, data in datadict.items():
             data_dict[hduname].append(data)
-    # print("data_dict", np.array(data_dict["SCIWAVE"])[:, 50])
+
     interp_data_dict = interpolation_spectra(data_dict, fluxext, wlext, varext)
-    # print(req_qtys_dict_fullext)
+
     if req_qtys is not None:
         for extname, qtys in req_qtys_dict_fullext.items():
-            # print(extname, qtys)
+
             for qty, value in qtys.items():
                 if method == 'weightedavg':
                     qty_method = 'mean'
@@ -284,7 +280,7 @@ def combine_spectra(filesre="*.fits", directory=".",
                                       varext=varext,
                                       extras=extra,
                                       table_info=tables)
-    # print(combined_dict)
+
     dict_keys = list(headerdict_main.keys())
 
     headerdict_main[dict_keys[0]]['HISTORY'] = "{} {}".format(method,
@@ -294,8 +290,7 @@ def combine_spectra(filesre="*.fits", directory=".",
     create_fits(combined_dict, headerdict_main,
                 filename=Path(directory) / opfilename)
     logger.info("Combined spectra")
-    # print(header_dict)
+
     del data_dict
-    # print(np.array(flux).shape)
 
 # End
