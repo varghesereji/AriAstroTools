@@ -221,6 +221,7 @@ def weighted_mean_and_variance(values, variances):
 
 def combine_data_full(datadict, dataext=[1, 2, 3],
                       varext=[4, 5, 6],
+                      extras=None,
                       method='mean'):
     """
     Combine flux and variance data from multiple FITS files into a single
@@ -244,6 +245,11 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
     varext : list of int, optional
         Indices of ``datadict.keys()`` that correspond to variance data.
         Default is ``[4, 5, 6]``.
+    extras : list of int, optional
+        Indices of ``datadict.keys()`` other than flux or variance that
+        needed to be combined.
+        Default is None
+
     method : {'mean', 'median', 'biweight'}, optional
         Method used to combine the fluxes and variances.
 
