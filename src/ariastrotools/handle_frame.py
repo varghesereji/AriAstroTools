@@ -459,8 +459,12 @@ def divide_smoothgradient(filename,
                                                size=medsmoothsize)
 
         except MemoryError:
-            print("*** MEMORY ERROR : Skipping median filter Division ***")
-            print("Try giving a smaller smooth size for medial filtter insted")
+            logger.error(
+                "Skipping extension %d because median filtering "
+                "ran out of memory.",
+                ext,
+                )
+            continue
         else:
             header = fits.getheader(filename, ext=0)
             NormContdata = inputimgdata / smoothGrad
