@@ -44,7 +44,18 @@ class Handle_NEID:
         fluxext = [1, 2, 3]
         varext = [4, 5, 6]
         wlext = [7, 8, 9]
-        return fluxext, varext, wlext
+        extra = [12]
+        tables = {
+            13: {
+                "value_cols": ["VALUE"],
+                "uncertainty_cols": ["UNCERTAINTY"],
+                "combine_cols": []
+            }
+        }
+        # Other than spectra, if any other qty
+        # need to be combined, those extension
+        # can be added here.
+        return fluxext, varext, wlext, extra, tables
 
     def getfull_data(self, fname):
         """
@@ -227,6 +238,13 @@ class Handle_NEID:
         {Name of extension: List of keys from that extension}
         """
         qty = {'CCFS': ['CCFRVMOD', 'BISMOD', 'FWHMMOD']}
+        for order in range(52, 174, 1):
+            key = "CCFRV"
+            if order < 100:
+                key_order = key + "0" + str(order)
+            else:
+                key_order = key + str(order)
+            qty['CCFS'].append(key_order)
         return qty
 
 

@@ -1,6 +1,8 @@
 # The functions to perform mathematical operations
 import numpy as np
 from astropy.stats import biweight_location
+from astropy.table import Table
+from astropy.io.fits.fitsrec import FITS_rec
 
 
 '''
@@ -131,6 +133,11 @@ def combine_data(dataarr, var=None, method='mean',
     - The biweight method is less sensitive to outliers than the mean
       or median.
     """
+
+    # Handle binary tables
+    if len(dataarr) > 0 and isinstance(dataarr[0], (FITS_rec, Table)):
+        return combine_bintable(dataarr, method=method)
+
     if method == 'weightedavg':
         comb_data, comb_var = weighted_mean_and_variance(dataarr, var)
         return comb_data, comb_var
@@ -219,84 +226,190 @@ def weighted_mean_and_variance(values, variances):
     return mean, variance_of_mean
 
 
+def combine_bintable(dataarr,
+                     value_cols=None,
+                     uncertainity_cols=None,
+                     combine_cols=None,
+                     method='mean'):
+
+    if value_cols is None:
+        value_cols = []
+
+    if uncertainity_cols is None:
+        uncertainity_cols = []
+
+    if combine_cols is None:
+        combine_cols = []
+
+    if len(value_cols) != len(uncertainity_cols):
+        raise ValueError(
+            "'value_cols' and 'uncertainity_cols' must have the same length"
+            )
+
+    tables = [Table(t) if not isinstance(t, Table) else t
+              for t in dataarr]
+
+    ref = tables[0]
+    comb = ref.copy(copy_data=True)
+
+    handled = set()
+
+    # Combine quantities with propagated uncertainities
+    for value_col, err_col in zip(value_cols, uncertainity_cols):
+
+        values = np.stack([t[value_col] for t in tables])
+        var = np.stack([t[err_col]**2 for t in tables])
+
+        comb[value_col], comb_var = combine_data(
+            values,
+            var=var,
+            method=method
+            )
+        comb[err_col] = np.sqrt(comb_var)
+        handled.update([value_col, err_col])
+
+    # Combine quantities without uncertainities
+    for col in combine_cols:
+
+        values = np.stack([t[col] for t in tables])
+
+        comb[col], _ = combine_data(
+            values,
+            method=method
+            )
+        handled.add(col)
+
+    # Verify all remaining columns are identical
+    for col in ref.colnames:
+
+        if col in handled:
+            continue
+
+        for table in tables[1:]:
+            if not np.array_equal(ref[col], table[col]):
+                raise ValueError(
+                    f"Column '{col}' differs between tables."
+                    )
+
+    return comb, None
+
+
 def combine_data_full(datadict, dataext=[1, 2, 3],
                       varext=[4, 5, 6],
+                      extras=[],
+                      table_info=None,
                       method='mean'):
     """
-    Combine flux and variance data from multiple FITS files into a single
-    dictionary.
+    Combine data from multiple FITS files into a single dictionary.
 
-    This function takes a dictionary of arrays (typically produced from
-    reading multiple FITS files), selects specific keys for flux and
-    variance, and combines them using a specified method (e.g. mean,
-    median, or biweight). Non-flux/variance entries are copied from the
-    first element of the corresponding arrays.
+    This function combines data arrays, variance arrays, additional
+    numeric arrays, and binary tables stored in a dictionary (typically
+    produced by reading multiple FITS files). Flux and variance arrays
+    are combined using ``combine_data``, while binary tables are combined
+    using ``combine_bintable``.
 
     Parameters
     ----------
     datadict : dict
-        Dictionary containing data arrays. Each key corresponds to a FITS
-        extension or metadata. Flux and variance arrays are stacked along
-        the first axis (i.e., shape ``(n_files, n_points, ...)``).
-    dataext : list of int, optional
-        Indices of ``datadict.keys()`` that correspond to flux data.
-        Default is ``[1, 2, 3]``.
-    varext : list of int, optional
-        Indices of ``datadict.keys()`` that correspond to variance data.
-        Default is ``[4, 5, 6]``.
-    method : {'mean', 'median', 'biweight'}, optional
-        Method used to combine the fluxes and variances.
+        Dictionary containing data from multiple FITS files. Each key
+        corresponds to a FITS extension or metadata item. Arrays to be
+        combined are expected to be stacked along the first axis
+        (i.e., shape ``(n_files, ...)``).
 
-        - ``'mean'`` : compute the mean across input files
-        - ``'median'`` : compute the median across input files
-        - ``'biweight'`` : compute the biweight across input files
+    dataext : list of int, optional
+        Indices of ``datadict.keys()`` corresponding to data arrays
+        (e.g., flux) that should be combined. Default is
+        ``[1, 2, 3]``.
+
+    varext : list of int, optional
+        Indices of ``datadict.keys()`` corresponding to variance arrays.
+        Each entry must correspond to the matching entry in
+        ``dataext``. Default is ``[4, 5, 6]``.
+
+    extras : list of int, optional
+        Indices of additional numeric arrays that should be combined
+        using ``combine_data`` without associated variance arrays.
+        Default is ``[]``.
+
+    table_info : dict, optional
+        Dictionary describing binary table extensions to combine. Keys
+        are indices into ``datadict.keys()`` and values are dictionaries
+        passed to ``combine_bintable``.
+
+        Each value may contain the following entries:
+
+        - ``value_cols`` : list of columns whose values are combined
+          with propagated uncertainties.
+        - ``uncertainty_cols`` : list of uncertainty columns
+          corresponding to ``value_cols``.
+        - ``combine_cols`` : list of numeric columns that are combined
+          without uncertainty propagation.
+
+        Columns not listed above are assumed to be identical in all
+        input tables and are copied from the first table after verifying
+        they are unchanged.
+
+        Default is ``None``.
+
+    method : {'mean', 'median', 'biweight'}, optional
+        Method used to combine the data.
+
+        - ``'mean'`` : arithmetic mean.
+        - ``'median'`` : median.
+        - ``'biweight'`` : biweight location.
 
     Returns
     -------
     comb_dicts : dict
-        New dictionary with combined flux and variance arrays.
+        Dictionary containing the combined data.
 
-        - Keys in ``flux_keys`` and ``var_keys`` contain the combined
-          arrays.
-        - Other keys are reduced to the first element of their array.
+        - Data arrays in ``dataext`` are combined.
+        - Variance arrays in ``varext`` are propagated.
+        - Arrays in ``extras`` are combined.
+        - Binary tables in ``table_info`` are combined using
+          ``combine_bintable``.
+        - All remaining entries are copied from the first input file.
 
     Notes
     -----
-    - This function assumes dictionary key order matches ``dataext`` and
-      ``varext``. Since Python 3.7, dictionary order is guaranteed to be
-      insertion order.
-    - Non-flux/variance arrays (e.g., wavelength grids, headers) are taken
-      from the first FITS file. If you want to preserve the full stack,
-      you should modify the loop that reduces them to index ``[0]``.
-    - To prevent modifying the original input, the function creates a
-      shallow copy of ``datadict``. Arrays themselves are *not*
-      deep-copied.
+    - The order of ``dataext`` and ``varext`` must correspond.
+    - Dictionary insertion order is assumed to match the FITS extension
+      order.
+    - Entries not listed in ``dataext``, ``varext``, ``extras``, or
+      ``table_info`` are copied from the first input file.
+    - ``table_info`` provides a generic mechanism for combining
+      arbitrary FITS binary tables without requiring instrument-specific
+      code.
 
     Examples
     --------
-    >>> import numpy as np
-    >>> datadict = {
-    ...     "KEY0": ["header1", "header2"],
-    ...     "SCIFLUX": np.array([[1, 2, 3], [4, 5, 6]]),
-    ...     "VAR": np.array([[1, 1, 1], [2, 2, 2]]),
-    ...     "WAVELENGTH": np.array([[500, 600], [700, 800]])
+    >>> table_info = {
+    ...     7: {
+    ...         "value_cols": ["VALUE"],
+    ...         "uncertainty_cols": ["UNCERTAINTY"],
+    ...         "combine_cols": []
+    ...     }
     ... }
-    >>> result = combine_data_full(datadict, dataext=[1], varext=[2],
-    ...                            method='mean')
-    >>> result["SCIFLUX"]
-    array([2.5, 3.5, 4.5])
-    >>> result["VAR"]
-    array([1.5, 1.5, 1.5])
-    >>> result["KEY0"]
-    'header1'
+    >>> combined = combine_data_full(
+    ...     datadict,
+    ...     dataext=[1],
+    ...     varext=[2],
+    ...     table_info=table_info,
+    ...     method="mean",
+    ... )
     """
-
     dictkeys = list(datadict.keys())
     print(dictkeys)
     comb_dicts = datadict.copy()
     # print("comb data full", np.array(datadict["SCIFLUX"]).shape)
     flux_keys = [dictkeys[int(i)] for i in dataext]
     var_keys = [dictkeys[int(i)] for i in varext]
+    if len(extras) > 0:
+        extra_keys = [dictkeys[int(i)] for i in extras]
+    else:
+        extra_keys = []
+
+    table_keys = [dictkeys[i] for i in table_info] if table_info else []
 
     # Avoiding the extensions that are not flux or variance.
     # Taking only the first element of that. i.e.,
@@ -306,9 +419,9 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
     # same array. So, that also
     # copied in the same way.
     for cro, keys in enumerate(dictkeys):
-        print(keys, flux_keys, var_keys)
-        if keys not in flux_keys + var_keys:
-            print('keys', keys)
+        # print(keys, flux_keys, var_keys)
+        if keys not in flux_keys + var_keys + extra_keys + table_keys:
+            # print('keys', keys)
             comb_dicts[keys] = comb_dicts[keys][0]
     # Doing for flux and variance.
     for index, extk in enumerate(flux_keys):
@@ -319,6 +432,24 @@ def combine_data_full(datadict, dataext=[1, 2, 3],
 
         comb_dicts[flux_keys[index]] = comb_flux
         comb_dicts[var_keys[index]] = comb_var
+
+    for index, ext in enumerate(extra_keys):
+        data = comb_dicts[ext]
+        comb_data, _ = combine_data(data,
+                                    method=method)
+        comb_dicts[ext] = comb_data
+    if table_info is not None:
+        for extnum, info in table_info.items():
+            key = dictkeys[extnum]
+            comb_table, _ = combine_bintable(
+                comb_dicts[key],
+                value_cols=info.get("value_cols", []),
+                uncertainity_cols=info.get("uncertainty_cols", []),
+                combine_cols=info.get("combine_cols", []),
+                method=method,
+            )
+
+            comb_dicts[key] = comb_table
     # print(datadict[flux_keys[0]].shape)
     # print(comb_dicts)
     return comb_dicts

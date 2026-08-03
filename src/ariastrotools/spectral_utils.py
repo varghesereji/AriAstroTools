@@ -203,6 +203,7 @@ def combine_spectra(filesre="*.fits", directory=".",
                     fluxext=(1, 2, 3),
                     varext=(4, 5, 6),
                     wlext=(7, 8, 9),
+                    extra=(12),
                     req_qtys=None):
     '''
     Function to combine spectra.
@@ -232,7 +233,8 @@ def combine_spectra(filesre="*.fits", directory=".",
         if len(instname_list) > 1:
             telluric_corr = instname_list[1].lower() == 'tel'
         instrument = instrument_dict[instrumentname]()
-        fluxext, varext, wlext = instrument.fits_extensions()
+        fluxext, varext, wlext, extra, tables = instrument.fits_extensions()
+        print(extra, "extra")
     req_qtys_dict = defaultdict(list)
     req_qtys_dict_fullext = {}
     for cro, specfile in enumerate(files_list):
@@ -252,7 +254,10 @@ def combine_spectra(filesre="*.fits", directory=".",
         if req_qtys is not None:
             for extname, qtys in req_qtys.items():
                 for qty in qtys:
-                    req_qtys_dict[qty].append(headerdict[extname][qty])
+                    header_qty = headerdict[extname][qty]
+                    if header_qty is None:
+                        continue
+                    req_qtys_dict[qty].append(header_qty)
                 req_qtys_dict_fullext[extname] = req_qtys_dict
         # print(req_qtys_dict)
         if headerdict_main is None:
@@ -273,9 +278,12 @@ def combine_spectra(filesre="*.fits", directory=".",
                     qty_method = method
                 comb_qty = combine_data(value, method=qty_method)
                 headerdict_main[extname][qty] = comb_qty[0]
+    print('extra', extra)
     combined_dict = combine_data_full(interp_data_dict, method=method,
                                       dataext=fluxext,
-                                      varext=varext)
+                                      varext=varext,
+                                      extras=extra,
+                                      table_info=tables)
     # print(combined_dict)
     dict_keys = list(headerdict_main.keys())
 
