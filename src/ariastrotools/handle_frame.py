@@ -254,9 +254,10 @@ def combine_process(files,
     Parameters
     ----------
     files : list of str or str
-        Input FITS files. Can be:
+        Input FITS files. May be either:
 
         - A list of FITS file paths.
+        - A glob pattern used to match FITS files within ``path``.
         - A string specifying a pattern/regular expression to match files in
           `path`.
 
@@ -290,15 +291,24 @@ def combine_process(files,
     None
         The combined FITS data is written directly to `opfilename`.
 
+    Raises
+    ------
+    TypeError
+        If ``files`` is neither a list of filenames nor a glob pattern.
+
+    FileNotFoundError
+        If ``files`` is given as a glob pattern and no matching files are
+        found in ``path``.
+
     Notes
     -----
     - If `instrument` is not `None`, this function delegates to
       `combine_spectra` and returns immediately.
-    - The combination of data is handled by `combine_data`, which is expected
-      to return `(result, variance)`.
-    - The variance extension in the output file is only written if
-      `varext` is provided.
-    - The primary HDU (extension 0) is replaced if `fluxext` includes 0.
+    - Input data are combined using ``combine_data``
+    - Variance extensions are processed only if ``varext`` is provided.
+    - If ``mask`` is supplied, bad pixels are masked or interpolated
+      using ``masking_frame`` before the output is written.
+    - The primary HDU is replaced when ``fluxext`` contains extension 0.
 
     Examples
     --------
