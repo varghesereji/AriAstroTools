@@ -44,7 +44,11 @@ class Handle_NEID:
         fluxext = [1, 2, 3]
         varext = [4, 5, 6]
         wlext = [7, 8, 9]
-        return fluxext, varext, wlext
+        extra = [12]
+        # Other than spectra, if any other qty
+        # need to be combined, those extension
+        # can be added here.
+        return fluxext, varext, wlext, extra
 
     def getfull_data(self, fname):
         """
