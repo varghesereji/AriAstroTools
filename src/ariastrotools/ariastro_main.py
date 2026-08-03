@@ -36,7 +36,7 @@ def process_inputs(file2: str):
 
 def main():
     parser = read_args()
-    print(parser)
+
     args = parser.parse_args()
     fnames = args.fnames
     logger.info("Starting the pipeline")
