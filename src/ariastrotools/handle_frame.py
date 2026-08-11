@@ -353,6 +353,7 @@ def combine_process(files,
                     fluxext=[0],
                     varext=None,
                     mask=None,
+                    mask_method='interpolate',
                     instrument=None
                     ):
     """
@@ -405,6 +406,17 @@ def combine_process(files,
     varext : list of int or None, optional
         List of FITS extensions containing variance data corresponding
         to `fluxext`. If `None`, variance is not processed. Default is `None`.
+
+    mask : array_like or str or None, optional
+        Bad-pixel mask to apply to the input data. If provided, bad pixels
+        are either interpolated or replaced with NaN according to
+        `mask_method`. Default is ``None``.
+
+    mask_method : {'interpolate', 'nan'}, optional
+        Method used to handle bad pixels when `mask` is provided and variance
+        data are available. ``'interpolate'`` replaces bad pixels by
+        interpolating from surrounding valid pixels, while ``'nan'`` replaces
+        bad pixels with NaN. Default is ``'interpolate'``.
 
     instrument : str or None, optional
         Instrument name. If provided, the function calls
@@ -514,9 +526,12 @@ def combine_process(files,
             else:
                 result, variance = masking_frame(result,
                                                  mask,
-                                                 variance)
-            header.add_history("Mask used: {}".format(mask))
-            header.add_history("Interpolated bad pixels")
+                                                 variance,
+                                                 method=mask_method)
+            header.add_history(f"Mask used: {mask}")
+            header.add_history(
+                f"Bad pixels handled using method: {mask_method}"
+            )
         if int(ext) == 0:
             hdul[0] = fits.PrimaryHDU(result, header=header)
         else:
