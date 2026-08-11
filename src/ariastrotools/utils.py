@@ -11,7 +11,7 @@ def call_mask(mask):
         return mask
 
     mask = str(mask)
-    logger.info(f"Calling ask: {mask}")
+    logger.info(f"Calling mask: {mask}")
 
     if mask.endswith(".fits"):
         mask = fits.getdata(mask).astype(bool)
