@@ -11,11 +11,14 @@ def call_mask(mask):
         return mask
 
     mask = str(mask)
+    logger.info(f"Calling ask: {mask}")
 
     if mask.endswith(".fits"):
         mask = fits.getdata(mask).astype(bool)
+
     elif mask.endswith(".npy"):
         mask = np.load(mask).astype(bool)
+
     else:
         logger.error(
             "Invalid scale mask: %s. "
