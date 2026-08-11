@@ -23,6 +23,7 @@ from astropy.io import fits
 from .operations import ari_operations
 from .operations import combine_data
 from .spectral_utils import combine_spectra
+from .utils import call_mask
 
 from .logger import logger
 
@@ -96,8 +97,7 @@ def masking_frame(frame, mask, variance=None, method='interpolate'):
 
     if isinstance(mask, list):
         mask = mask[0]
-    if isinstance(mask, str) or isinstance(mask, Path):
-        mask = np.load(mask)
+    mask = call_mask(mask)
     mask_bool = mask == 1
 
     if method == 'nan':
