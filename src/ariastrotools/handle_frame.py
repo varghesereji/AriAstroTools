@@ -322,9 +322,14 @@ def combine_process(files,
         Combination method for data arrays (e.g., 'mean', 'median').
         Passed to `combine_data`. Default is `'mean'`.
 
-    scale : str, optional
-        Scaleing scheme to scale the frames in the datacube.
-        patterin is `'pXX'`. Default is None.
+    scale : str or None, optional
+        Percentile-based scaling scheme used to normalize the input frames
+        before combination. The value should follow the ``'pXX'`` format,
+        where ``XX`` specifies the percentile used to determine the scaling
+        factor. For example, ``'p50'`` uses the 50th percentile (median) of
+        each frame for scaling. The corresponding variance arrays are
+        scaled consistently. If ``None``, no scaling is applied.
+        Default is ``None``.
 
     fluxext : list of int, optional
         List of FITS extensions containing flux (or image) data.
