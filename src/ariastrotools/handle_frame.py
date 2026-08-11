@@ -528,8 +528,10 @@ def combine_process(files,
                                                  mask,
                                                  variance,
                                                  method=mask_method)
-            header.add_history("Mask used: {}".format(mask))
-            header.add_history("Interpolated bad pixels")
+            header.add_history(f"Mask used: {mask}")
+            header.add_history(
+                f"Bad pixels handled using method: {mask_method}"
+            )
         if int(ext) == 0:
             hdul[0] = fits.PrimaryHDU(result, header=header)
         else:
