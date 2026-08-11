@@ -32,6 +32,73 @@ def scale_datacube(datacube,
                    varcube=None,
                    scale="p50",
                    scale_mask=None):
+    """
+    Scale the frames in a data cube using percentile-based scaling.
+
+    Each frame is assigned a scaling factor based on the specified
+    percentile. The scaling factors are normalized by their median value
+    before scaling the data cube. If a variance cube is provided, the
+    variance is scaled consistently with the data.
+
+    Parameters
+    ----------
+    datacube : numpy.ndarray
+        Input data cube with shape (n_frames, ny, nx).
+
+    varcube : numpy.ndarray or None, optional
+        Variance cube corresponding to `datacube`, with the same shape.
+        If provided, the variance is scaled by the square of the scaling
+        factor. Default is None.
+
+    scale : str, optional
+        Scaling scheme to use. Currently, only percentile-based scaling
+        in the form ``'pXX'`` is supported, where ``XX`` specifies the
+        percentile used to determine the scaling factor. For example,
+        ``'p50'`` uses the 50th percentile (median) of each frame.
+        The scaling factors are normalized by their median value.
+        Default is ``'p50'``.
+
+    scale_mask : numpy.ndarray or None, optional
+        Boolean mask identifying pixels to exclude when calculating the
+        percentile scaling factors. The same mask is applied to every
+        frame. If None, all valid (non-NaN) pixels are used.
+        Default is None.
+
+    Returns
+    -------
+    scaled_datacube : numpy.ndarray
+        Scaled data cube with the same shape as `datacube`.
+
+    scaled_varcube : numpy.ndarray or None
+        Scaled variance cube with the same shape as `varcube`, or None
+        if `varcube` was not provided.
+
+    scale_array : numpy.ndarray
+        One-dimensional array containing the normalized scaling factor
+        for each frame. The median of the scaling factors is one.
+
+    Raises
+    ------
+    ValueError
+        If `scale` does not follow the supported ``'pXX'`` format.
+
+    Notes
+    -----
+    The scaling factor for each frame is calculated from the specified
+    percentile and then normalized by the median of all frame scaling
+    factors:
+
+    ``scale_factor = percentile(frame) / median(percentile_values)``
+
+    The data and variance are then scaled as:
+
+    ``scaled_data = data / scale_factor``
+
+    ``scaled_variance = variance / scale_factor**2``
+
+    For example, with ``scale='p50'``, each frame is normalized using
+    its median value relative to the median of the frame medians.
+    """
 
     logger.info(f"Using {scale}")
 
