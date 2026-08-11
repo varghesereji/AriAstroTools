@@ -50,7 +50,14 @@ def scale_datacube(datacube,
                         ) for d in datacube
                     ]
                 )
+    else:
+        logger.error(
+            f"Scale method {scale} which is not pXX not yet implemented"
+            )
 
+        raise ValueError(
+            f"Scale method {scale} which is not pXX not yet implemented"
+            )
 
 
 def masking_frame(frame, mask, variance=None, method='interpolate'):
