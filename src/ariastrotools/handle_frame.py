@@ -66,6 +66,11 @@ def scale_datacube(datacube,
     if varcube is None:
         return scaled_datacube, None, scale_array
 
+    scaled_varcube = varcube / (
+        scale_array[:, np.newaxis, np.newaxis]
+        ) ** 2
+
+    return scaled_datacube, scaled_varcube, scale_array
 
 
 def masking_frame(frame, mask, variance=None, method='interpolate'):
