@@ -9,8 +9,13 @@ def call_mask(mask):
         return None
     if isinstance(mask, np.ndarray):
         return mask
+
     mask = str(mask)
 
+    if mask.endswith(".fits"):
+        mask = fits.getdata(mask).astype(bool)
+    elif mask.endswith(".npy"):
+        mask = np.load(mask).astype(bool)
 
 
 def shrink_fits(filename, extensions, replace=False,
