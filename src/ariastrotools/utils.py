@@ -1,7 +1,14 @@
 from astropy.io import fits
 from pathlib import Path
-
+import numpy as np
 from .logger import logger
+
+
+def call_mask(mask):
+    if mask is None:
+        return None
+    if isinstance(mask, np.ndarray):
+        return mask
 
 
 def shrink_fits(filename, extensions, replace=False,
