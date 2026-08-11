@@ -59,6 +59,8 @@ def scale_datacube(datacube,
             f"Scale method {scale} which is not pXX not yet implemented"
             )
 
+    scale_array = scale_array / np.nanmedian(scale_array)
+
 
 def masking_frame(frame, mask, variance=None, method='interpolate'):
     """
