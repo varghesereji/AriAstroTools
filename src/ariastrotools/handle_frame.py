@@ -28,6 +28,14 @@ from .utils import call_mask
 from .logger import logger
 
 
+def scale_datacube(datacube,
+                   varcube=None,
+                   scale="p50",
+                   scale_mask=None):
+    logger.info(f"Using {scale}")
+    scale_mask = call_mask(scale_mask)
+
+
 def masking_frame(frame, mask, variance=None, method='interpolate'):
     """
     Apply a bad-pixel mask to a data frame.
