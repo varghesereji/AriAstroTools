@@ -32,8 +32,25 @@ def scale_datacube(datacube,
                    varcube=None,
                    scale="p50",
                    scale_mask=None):
+
     logger.info(f"Using {scale}")
+
     scale_mask = call_mask(scale_mask)
+
+    if scale[0] == 'p':  # Using percentie scaling
+        percentile = float(scale[1:])
+
+        if scale_mask is None:
+            scale_array = np.nanpercentile(datacube, percentile, axis=(1, 2))
+        else:
+            scale_array = np.array(
+                [
+                    np.nanpercentile(
+                        d[~scale_mask], percentile
+                        ) for d in datacube
+                    ]
+                )
+
 
 
 def masking_frame(frame, mask, variance=None, method='interpolate'):
