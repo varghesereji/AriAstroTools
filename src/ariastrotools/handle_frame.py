@@ -353,6 +353,7 @@ def combine_process(files,
                     fluxext=[0],
                     varext=None,
                     mask=None,
+                    mask_method='interpolate',
                     instrument=None
                     ):
     """
@@ -514,7 +515,8 @@ def combine_process(files,
             else:
                 result, variance = masking_frame(result,
                                                  mask,
-                                                 variance)
+                                                 variance,
+                                                 method=mask_method)
             header.add_history("Mask used: {}".format(mask))
             header.add_history("Interpolated bad pixels")
         if int(ext) == 0:
