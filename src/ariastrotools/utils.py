@@ -16,6 +16,16 @@ def call_mask(mask):
         mask = fits.getdata(mask).astype(bool)
     elif mask.endswith(".npy"):
         mask = np.load(mask).astype(bool)
+    else:
+        logger.error(
+            "Invalid scale mask: %s. "
+            "Expected as NumPy array, FITS file, or NPY file.",
+            mask
+            )
+        raise ValueError(
+            "mask must be a NumPy array, FITS file or NPY file."
+            )
+    return mask
 
 
 def shrink_fits(filename, extensions, replace=False,
