@@ -100,7 +100,7 @@ def scale_datacube(datacube,
     its median value relative to the median of the frame medians.
     """
 
-    logger.info(f"Using {scale}")
+    logger.info(f"Using {scale} scheme for scaleing.")
 
     scale_mask = call_mask(scale_mask)
 
