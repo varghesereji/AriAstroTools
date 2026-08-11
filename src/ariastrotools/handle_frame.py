@@ -421,11 +421,16 @@ def combine_process(files,
                 variance = var_array[0]
         else:
             if scale is not None:
-                data_array, var_array, _ = scale_datacube(
+                data_array, var_array, scale_array = scale_datacube(
                     datacube=data_array,
                     varcube=var_array,
                     scale=scale,
-                    scale_mask=mask)
+                    scale_mask=mask
+                )
+                header.add_history(
+                    f"Arrays are scaled with {list(scale_array)}"
+                )
+
             result, variance = combine_data(dataarr=data_array,
                                             var=var_array,
                                             method=method)
