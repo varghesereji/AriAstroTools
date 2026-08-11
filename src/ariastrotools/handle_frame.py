@@ -63,12 +63,15 @@ def scale_datacube(datacube,
 
     scaled_datacube = datacube / scale_array[:, np.newaxis, np.newaxis]
 
+    logger.info(f"The datacube is being scaled with {scale_array}")
     if varcube is None:
         return scaled_datacube, None, scale_array
 
     scaled_varcube = varcube / (
         scale_array[:, np.newaxis, np.newaxis]
         ) ** 2
+
+    logger.info("Scaleing variance")
 
     return scaled_datacube, scaled_varcube, scale_array
 
