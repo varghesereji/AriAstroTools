@@ -1,0 +1,780 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="instrument module" href="instrument.html"><link rel="prev" title="utils module" href="utils.html">
+        <link rel="prefetch" href="../_static/AriAstro_logo.png" as="image">
+
+    <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
+        <title>handle frame module - AriAstroTools documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">AriAstroTools  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/AriAstro_logo.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">AriAstroTools  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html#combine-frames">Combine Frames</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html#binary-operations">Binary Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../flowchart.html">Module Flowchart</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../api.html">API Reference</a><input aria-label="Toggle navigation of API Reference" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="operations.html">operations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">utils module</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">handle frame module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instrument.html">instrument module</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/source/handle_frame.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="module-ariastrotools.handle_frame">
+<span id="handle-frame-module"></span><h1>handle frame module<a class="headerlink" href="#module-ariastrotools.handle_frame" title="Link to this heading">¶</a></h1>
+<p>This module contains functions for processing astronomical FITS frames.
+Includes functions for arithmetic operations, combining data,
+removing cosmic rays, and smoothing gradients.</p>
+<p>Functions:
+- operate_process
+- combine_process
+- divide_smoothgradient
+- remove_cosmic_rays</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="ariastrotools.handle_frame.combine_process">
+<span class="sig-prename descclassname"><span class="pre">ariastrotools.handle_frame.</span></span><span class="sig-name descname"><span class="pre">combine_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opfilename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluxext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'interpolate'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instrument</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ariastrotools/handle_frame.html#combine_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ariastrotools.handle_frame.combine_process" title="Link to this definition">¶</a></dt>
+<dd><p>Combine spectral or image data from multiple FITS files into a single
+output FITS file.</p>
+<p>This function supports two modes of operation:</p>
+<ol class="arabic simple">
+<li><p>If an instrument is specified, it calls an instrument-specific routine
+(<cite>combine_spectra</cite>).</p></li>
+<li><p>Otherwise, it manually reads data arrays and (optionally) variance
+arrays from the input files, combines them using the given method,
+and writes the results into a new FITS file.</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>files</strong> (<em>list</em><em> of </em><em>str</em><em> or </em><em>str</em>) – <p>Input FITS files. May be either:</p>
+<ul>
+<li><p>A list of FITS file paths.</p></li>
+<li><p>A glob pattern used to match FITS files within <code class="docutils literal notranslate"><span class="pre">path</span></code>.</p></li>
+<li><p>A string specifying a pattern/regular expression to match files in
+<cite>path</cite>.</p></li>
+</ul>
+</p></li>
+<li><p><strong>opfilename</strong> (<em>str</em>) – Output FITS filename to write the combined data.</p></li>
+<li><p><strong>path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to search for FITS files if <cite>files</cite> is provided as a string
+pattern.
+Default is <cite>‘.’</cite>.</p></li>
+<li><p><strong>method</strong> (<em>str</em><em>, </em><em>optional</em>) – Combination method for data arrays (e.g., ‘mean’, ‘median’).
+Passed to <cite>combine_data</cite>. Default is <cite>‘mean’</cite>.</p></li>
+<li><p><strong>scale</strong> (<em>str</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Percentile-based scaling scheme used to normalize the input frames
+before combination. The value should follow the <code class="docutils literal notranslate"><span class="pre">'pXX'</span></code> format,
+where <code class="docutils literal notranslate"><span class="pre">XX</span></code> specifies the percentile used to determine the scaling
+factor. For example, <code class="docutils literal notranslate"><span class="pre">'p50'</span></code> uses the 50th percentile (median) of
+each frame for scaling. The corresponding variance arrays are
+scaled consistently. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, no scaling is applied.
+Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>fluxext</strong> (<em>list</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – List of FITS extensions containing flux (or image) data.
+Default is <cite>[0]</cite>.</p></li>
+<li><p><strong>varext</strong> (<em>list</em><em> of </em><em>int</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – List of FITS extensions containing variance data corresponding
+to <cite>fluxext</cite>. If <cite>None</cite>, variance is not processed. Default is <cite>None</cite>.</p></li>
+<li><p><strong>mask</strong> (<em>array_like</em><em> or </em><em>str</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Bad-pixel mask to apply to the input data. If provided, bad pixels
+are either interpolated or replaced with NaN according to
+<cite>mask_method</cite>. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>mask_method</strong> (<em>{'interpolate'</em><em>, </em><em>'nan'}</em><em>, </em><em>optional</em>) – Method used to handle bad pixels when <cite>mask</cite> is provided and variance
+data are available. <code class="docutils literal notranslate"><span class="pre">'interpolate'</span></code> replaces bad pixels by
+interpolating from surrounding valid pixels, while <code class="docutils literal notranslate"><span class="pre">'nan'</span></code> replaces
+bad pixels with NaN. Default is <code class="docutils literal notranslate"><span class="pre">'interpolate'</span></code>.</p></li>
+<li><p><strong>instrument</strong> (<em>str</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Instrument name. If provided, the function calls
+<cite>combine_spectra</cite> instead of the default combination logic.
+Default is <cite>None</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The combined FITS data is written directly to <cite>opfilename</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – If <code class="docutils literal notranslate"><span class="pre">files</span></code> is neither a list of filenames nor a glob pattern.</p></li>
+<li><p><strong>FileNotFoundError</strong> – If <code class="docutils literal notranslate"><span class="pre">files</span></code> is given as a glob pattern and no matching files are
+    found in <code class="docutils literal notranslate"><span class="pre">path</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>If <cite>instrument</cite> is not <cite>None</cite>, this function delegates to
+<cite>combine_spectra</cite> and returns immediately.</p></li>
+<li><p>Input data are combined using <code class="docutils literal notranslate"><span class="pre">combine_data</span></code></p></li>
+<li><p>Variance extensions are processed only if <code class="docutils literal notranslate"><span class="pre">varext</span></code> is provided.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">mask</span></code> is supplied, bad pixels are masked or interpolated
+using <code class="docutils literal notranslate"><span class="pre">masking_frame</span></code> before the output is written.</p></li>
+<li><p>The primary HDU is replaced when <code class="docutils literal notranslate"><span class="pre">fluxext</span></code> contains extension 0.</p></li>
+</ul>
+<p class="rubric">Examples</p>
+<p>Combine the primary extension of a list of FITS files using the mean:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">combine_process</span><span class="p">(</span><span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;file1.fits&quot;</span><span class="p">,</span> <span class="s2">&quot;file2.fits&quot;</span><span class="p">],</span>
+<span class="gp">... </span>                <span class="n">opfilename</span><span class="o">=</span><span class="s2">&quot;combined.fits&quot;</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">fluxext</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span>                <span class="n">method</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Combine flux and variance from extensions 1 and 2:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">combine_process</span><span class="p">(</span><span class="n">files</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;obs1.fits&quot;</span><span class="p">,</span> <span class="s2">&quot;obs2.fits&quot;</span><span class="p">],</span>
+<span class="gp">... </span>                <span class="n">opfilename</span><span class="o">=</span><span class="s2">&quot;combined.fits&quot;</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">fluxext</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>                <span class="n">varext</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+<span class="gp">... </span>                <span class="n">method</span><span class="o">=</span><span class="s2">&quot;median&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ariastrotools.handle_frame.divide_smoothgradient">
+<span class="sig-prename descclassname"><span class="pre">ariastrotools.handle_frame.</span></span><span class="sig-name descname"><span class="pre">divide_smoothgradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opfilename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">medsmoothsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(25,</span> <span class="pre">51)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluxext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ariastrotools/handle_frame.html#divide_smoothgradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ariastrotools.handle_frame.divide_smoothgradient" title="Link to this definition">¶</a></dt>
+<dd><p>Apply a median filter to an astronomical FITS image and normalize it
+by dividing the original image by the smoothed background gradient.</p>
+<p>This is typically used to remove large-scale background gradients
+while preserving smaller-scale features in the image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – Input FITS file containing the data to be processed.</p></li>
+<li><p><strong>opfilename</strong> (<em>str</em>) – Output FITS file where the processed result will be saved.</p></li>
+<li><p><strong>path</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the input file. Default is the current directory (‘.’).</p></li>
+<li><p><strong>medsmoothsize</strong> (<em>tuple</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Size of the median filter window. Larger sizes smooth more strongly.
+Default is (25, 51).</p></li>
+<li><p><strong>fluxext</strong> (<em>list</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – List of extensions in the FITS file that contain the flux/image data
+to be normalized. Default is [0] (primary extension).</p></li>
+<li><p><strong>varext</strong> (<em>list</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – List of extensions corresponding to variance maps for each flux
+extension. If provided, the variance maps will also be normalized by
+the squared smoothed gradient. Default is None.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The function clips the input image values to avoid division by zero:
+<cite>inputimgdata = np.clip(inputimgdata, 1, np.max(inputimgdata+1))</cite>.</p></li>
+<li><p>Median filtering may be memory intensive. If a <cite>MemoryError</cite> occurs,
+try using a smaller <cite>medsmoothsize</cite>.</p></li>
+<li><dl class="simple">
+<dt>For each extension processed:</dt><dd><ul>
+<li><p>The flux is divided by the median-smoothed version of itself.</p></li>
+<li><p>If variance data are provided, they are divided by the square
+of the median-smoothed image.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>The output FITS file contains the normalized data (and variance maps,
+if applicable) with updated headers recording the operation history.</p></li>
+</ul>
+<section id="output">
+<h2>Output<a class="headerlink" href="#output" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>FITS file</dt><dd><p>A FITS file (<cite>opfilename</cite>) containing the normalized image(s) and
+optional variance extensions.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">divide_smoothgradient</span><span class="p">(</span><span class="s2">&quot;input.fits&quot;</span><span class="p">,</span> <span class="s2">&quot;output.fits&quot;</span><span class="p">,</span>
+<span class="gp">... </span>                      <span class="n">medsmoothsize</span><span class="o">=</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">51</span><span class="p">),</span>
+<span class="gp">... </span>                      <span class="n">fluxext</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>                      <span class="n">varext</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ariastrotools.handle_frame.masking_frame">
+<span class="sig-prename descclassname"><span class="pre">ariastrotools.handle_frame.</span></span><span class="sig-name descname"><span class="pre">masking_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'interpolate'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ariastrotools/handle_frame.html#masking_frame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ariastrotools.handle_frame.masking_frame" title="Link to this definition">¶</a></dt>
+<dd><p>Apply a bad-pixel mask to a data frame.</p>
+<p>Pixels where the mask is not equal to 1 are either replaced with
+NaN values or interpolated from neighboring pixels, depending on
+the selected method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frame</strong> (<em>numpy.ndarray</em>) – Input 2D data array.</p></li>
+<li><p><strong>mask</strong> (<em>numpy.ndarray</em><em>, </em><em>str</em><em>, </em><em>pathlib.Path</em><em>, or </em><em>list</em>) – <p>Mask information. Supported inputs are:</p>
+<ul>
+<li><p>numpy.ndarray :
+Boolean/integer mask array with the same shape as <code class="docutils literal notranslate"><span class="pre">frame</span></code>.
+Pixels with value 1 are considered valid.</p></li>
+<li><p>str or pathlib.Path :
+Path to a <code class="docutils literal notranslate"><span class="pre">.npy</span></code> mask file that will be loaded using
+<code class="docutils literal notranslate"><span class="pre">numpy.load</span></code>.</p></li>
+<li><p>list :
+If a list is provided, only the first element is used.
+This is useful when arguments are parsed using
+<code class="docutils literal notranslate"><span class="pre">argparse</span></code> with <code class="docutils literal notranslate"><span class="pre">nargs='+'</span></code>.</p></li>
+</ul>
+</p></li>
+<li><p><strong>variance</strong> (<em>numpy.ndarray</em><em>, </em><em>optional</em>) – Variance array corresponding to <code class="docutils literal notranslate"><span class="pre">frame</span></code>. If provided,
+variances of masked pixels are multiplied by 1000 after
+masking/interpolation to reflect their reduced reliability.</p></li>
+<li><p><strong>method</strong> (<em>{'nan'</em><em>, </em><em>'interpolate'}</em><em>, </em><em>optional</em>) – <p>Method used to handle masked pixels.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'nan'</span></code> :
+Replace masked pixels with <code class="docutils literal notranslate"><span class="pre">NaN</span></code> values.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'interpolate'</span></code> :
+Fill masked pixels using biharmonic inpainting from
+neighboring valid pixels.</p></li>
+</ul>
+<p>Default is <code class="docutils literal notranslate"><span class="pre">'interpolate'</span></code>.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>If <code class="docutils literal notranslate"><span class="pre">variance</span></code> is not provided, returns the processed frame.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">variance</span></code> is provided, returns <code class="docutils literal notranslate"><span class="pre">(frame,</span> <span class="pre">variance)</span></code>,
+where the variance of masked pixels has been increased.</p>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray or tuple</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">method='nan'</span></code>, the input <code class="docutils literal notranslate"><span class="pre">frame</span></code> is modified in place.</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">method='interpolate'</span></code>, a new array is returned by the
+interpolation routine.</p>
+<p>Interpolated pixels should be treated with caution, particularly
+for large masked regions. When a variance map is supplied, the
+variance of masked pixels is increased to reduce their influence
+in subsequent weighted analyses.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ariastrotools.handle_frame.operate_process">
+<span class="sig-prename descclassname"><span class="pre">ariastrotools.handle_frame.</span></span><span class="sig-name descname"><span class="pre">operate_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opfilename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'+'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluxext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ariastrotools/handle_frame.html#operate_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ariastrotools.handle_frame.operate_process" title="Link to this definition">¶</a></dt>
+<dd><p>Perform arithmetic operations on FITS file extensions and write results.</p>
+<p>This function takes one FITS file (<code class="docutils literal notranslate"><span class="pre">ip1</span></code>) and either another FITS file
+or a constant value (<code class="docutils literal notranslate"><span class="pre">ip2</span></code>), performs the specified operation on the
+selected extensions, and writes the result to a new FITS file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ip1</strong> (<em>str</em>) – Path to the first FITS file.</p></li>
+<li><p><strong>ip2</strong> (<em>str</em><em> or </em><em>float</em>) – Path to the second FITS file, or a constant value to apply the
+operation.
+- If a filename, the same extensions as in <code class="docutils literal notranslate"><span class="pre">fluxext</span></code> will be read.
+- If a float, the value is broadcasted to the data in <code class="docutils literal notranslate"><span class="pre">ip1</span></code>.</p></li>
+<li><p><strong>opfilename</strong> (<em>str</em>) – Output FITS filename where the result will be written.</p></li>
+<li><p><strong>operation</strong> (<em>{'+'</em><em>, </em><em>'-'</em><em>, </em><em>'*'</em><em>, </em><em>'/'</em><em>, </em><em>...</em><em>}</em><em>, </em><em>optional</em>) – Arithmetic operation to perform. Default is <code class="docutils literal notranslate"><span class="pre">'+'</span></code>.
+The valid set depends on what <code class="docutils literal notranslate"><span class="pre">ari_operations</span></code> supports.</p></li>
+<li><p><strong>fluxext</strong> (<em>list</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – List of extension numbers containing flux data in the input files.
+Each extension in this list will be processed. Default is <code class="docutils literal notranslate"><span class="pre">[0]</span></code>
+(primary HDU).</p></li>
+<li><p><strong>varext</strong> (<em>list</em><em> of </em><em>int</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – List of extension numbers containing variance data corresponding to
+each entry in <code class="docutils literal notranslate"><span class="pre">fluxext</span></code>. If <code class="docutils literal notranslate"><span class="pre">None</span></code> (default), variance propagation
+is skipped.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>For each extension in <code class="docutils literal notranslate"><span class="pre">fluxext</span></code>:</p>
+<ol class="arabic simple">
+<li><p>Data are read from <code class="docutils literal notranslate"><span class="pre">ip1</span></code> and <code class="docutils literal notranslate"><span class="pre">ip2</span></code>.</p></li>
+<li><p>The operation is applied using <code class="docutils literal notranslate"><span class="pre">ari_operations</span></code>.</p></li>
+<li><p>Results are stored in the output HDUList.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">varext</span></code> is provided, the corresponding variance extensions are
+also operated on and appended to the output.</p></li>
+</ol>
+</li>
+<li><p>If an extension index is <code class="docutils literal notranslate"><span class="pre">0</span></code>, the result is stored in the
+<code class="docutils literal notranslate"><span class="pre">PrimaryHDU</span></code>. Otherwise, results are stored as <code class="docutils literal notranslate"><span class="pre">ImageHDU</span></code>
+extensions.</p></li>
+<li><p>A <code class="docutils literal notranslate"><span class="pre">HISTORY</span></code> entry is added to the output headers to track
+the operation.</p></li>
+</ul>
+<p class="rubric">Examples</p>
+<p>Add fluxes in the primary HDU of two FITS files:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">operate_process</span><span class="p">(</span><span class="s2">&quot;file1.fits&quot;</span><span class="p">,</span> <span class="s2">&quot;file2.fits&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;sum.fits&quot;</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">fluxext</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Subtract a constant value from a flux extension:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">operate_process</span><span class="p">(</span><span class="s2">&quot;file1.fits&quot;</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span>
+                <span class="s2">&quot;output.fits&quot;</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">fluxext</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Perform multiplication with variance propagation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">operate_process</span><span class="p">(</span><span class="s2">&quot;file1.fits&quot;</span><span class="p">,</span> <span class="s2">&quot;file2.fits&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;multiplied.fits&quot;</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span>
+                <span class="n">fluxext</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">varext</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ariastrotools.handle_frame.remove_cosmic_rays">
+<span class="sig-prename descclassname"><span class="pre">ariastrotools.handle_frame.</span></span><span class="sig-name descname"><span class="pre">remove_cosmic_rays</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opfilename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluxext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ariastrotools/handle_frame.html#remove_cosmic_rays"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ariastrotools.handle_frame.remove_cosmic_rays" title="Link to this definition">¶</a></dt>
+<dd><p>Remove cosmic rays from FITS image extensions using <code class="docutils literal notranslate"><span class="pre">astroscrappy</span></code>.</p>
+<p>This function reads one or more image extensions from a FITS file,
+detects and removes cosmic rays using the <code class="docutils literal notranslate"><span class="pre">astroscrappy.detect_cosmics</span></code>
+algorithm, and writes the cleaned images (along with cosmic-ray masks
+and optional variance extensions) into a new output FITS file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_fname</strong> (<em>str</em>) – Path to the input FITS file containing the image data.</p></li>
+<li><p><strong>opfilename</strong> (<em>str</em>) – Path to the output FITS file where the cosmic-ray-cleaned data
+will be written.</p></li>
+<li><p><strong>fluxext</strong> (<em>list</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – List of extension indices in the input FITS file that contain
+image data to be cleaned. Default is <code class="docutils literal notranslate"><span class="pre">[0]</span></code> (the primary HDU).</p></li>
+<li><p><strong>varext</strong> (<em>list</em><em> of </em><em>int</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – List of extension indices corresponding to variance data for
+each flux extension. If provided, the same indices are used to
+fetch the variance arrays and pass them to
+<code class="docutils literal notranslate"><span class="pre">astroscrappy.detect_cosmics</span></code> for improved detection. If
+<code class="docutils literal notranslate"><span class="pre">None</span></code> (default), cosmic-ray detection is run without variance
+information.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul>
+<li><p>The function uses the <code class="docutils literal notranslate"><span class="pre">astroscrappy</span></code> implementation of the LA
+Cosmic algorithm to detect and remove cosmic rays.</p></li>
+<li><p>For each processed image extension, the following are written to
+the output file:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The cleaned image data</p></li>
+<li><p>(Optionally) the corresponding variance extension, if
+<code class="docutils literal notranslate"><span class="pre">varext</span></code> is given</p></li>
+<li><p>A binary mask extension named <code class="docutils literal notranslate"><span class="pre">CRMASK</span></code> with 1 where cosmic
+rays were detected</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>A <code class="docutils literal notranslate"><span class="pre">HISTORY</span></code> keyword is added to the header indicating that
+cosmic rays were removed with <code class="docutils literal notranslate"><span class="pre">astroscrappy</span></code>.</p></li>
+</ul>
+<section id="output-structure">
+<h2>Output Structure<a class="headerlink" href="#output-structure" title="Link to this heading">¶</a></h2>
+<p>The output FITS file will contain, in order:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Cleaned image(s) in the same order as <code class="docutils literal notranslate"><span class="pre">fluxext</span></code></p></li>
+<li><p>Optional variance image(s), if <code class="docutils literal notranslate"><span class="pre">varext</span></code> is provided</p></li>
+<li><p>Corresponding cosmic-ray mask(s) named <code class="docutils literal notranslate"><span class="pre">CRMASK</span></code></p></li>
+</ol>
+</div></blockquote>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">remove_cosmic_rays</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="s2">&quot;raw_image.fits&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;cleaned_image.fits&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">fluxext</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">varext</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This reads extensions 1 and 2 as flux images, uses extensions 3 and
+4 as variance maps, removes cosmic rays, and writes a cleaned file
+containing the corrected images, variance maps, and cosmic-ray masks.</p>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ariastrotools.handle_frame.scale_datacube">
+<span class="sig-prename descclassname"><span class="pre">ariastrotools.handle_frame.</span></span><span class="sig-name descname"><span class="pre">scale_datacube</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datacube</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varcube</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'p50'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ariastrotools/handle_frame.html#scale_datacube"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ariastrotools.handle_frame.scale_datacube" title="Link to this definition">¶</a></dt>
+<dd><p>Scale the frames in a data cube using percentile-based scaling.</p>
+<p>Each frame is assigned a scaling factor based on the specified
+percentile. The scaling factors are normalized by their median value
+before scaling the data cube. If a variance cube is provided, the
+variance is scaled consistently with the data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>datacube</strong> (<em>numpy.ndarray</em>) – Input data cube with shape (n_frames, ny, nx).</p></li>
+<li><p><strong>varcube</strong> (<em>numpy.ndarray</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Variance cube corresponding to <cite>datacube</cite>, with the same shape.
+If provided, the variance is scaled by the square of the scaling
+factor. Default is None.</p></li>
+<li><p><strong>scale</strong> (<em>str</em><em>, </em><em>optional</em>) – Scaling scheme to use. Currently, only percentile-based scaling
+in the form <code class="docutils literal notranslate"><span class="pre">'pXX'</span></code> is supported, where <code class="docutils literal notranslate"><span class="pre">XX</span></code> specifies the
+percentile used to determine the scaling factor. For example,
+<code class="docutils literal notranslate"><span class="pre">'p50'</span></code> uses the 50th percentile (median) of each frame.
+The scaling factors are normalized by their median value.
+Default is <code class="docutils literal notranslate"><span class="pre">'p50'</span></code>.</p></li>
+<li><p><strong>scale_mask</strong> (<em>numpy.ndarray</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Boolean mask identifying pixels to exclude when calculating the
+percentile scaling factors. The same mask is applied to every
+frame. If None, all valid (non-NaN) pixels are used.
+Default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>scaled_datacube</strong> (<em>numpy.ndarray</em>) – Scaled data cube with the same shape as <cite>datacube</cite>.</p></li>
+<li><p><strong>scaled_varcube</strong> (<em>numpy.ndarray or None</em>) – Scaled variance cube with the same shape as <cite>varcube</cite>, or None
+if <cite>varcube</cite> was not provided.</p></li>
+<li><p><strong>scale_array</strong> (<em>numpy.ndarray</em>) – One-dimensional array containing the normalized scaling factor
+for each frame. The median of the scaling factors is one.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If <cite>scale</cite> does not follow the supported <code class="docutils literal notranslate"><span class="pre">'pXX'</span></code> format.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The scaling factor for each frame is calculated from the specified
+percentile and then normalized by the median of all frame scaling
+factors:</p>
+<p><code class="docutils literal notranslate"><span class="pre">scale_factor</span> <span class="pre">=</span> <span class="pre">percentile(frame)</span> <span class="pre">/</span> <span class="pre">median(percentile_values)</span></code></p>
+<p>The data and variance are then scaled as:</p>
+<p><code class="docutils literal notranslate"><span class="pre">scaled_data</span> <span class="pre">=</span> <span class="pre">data</span> <span class="pre">/</span> <span class="pre">scale_factor</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">scaled_variance</span> <span class="pre">=</span> <span class="pre">variance</span> <span class="pre">/</span> <span class="pre">scale_factor**2</span></code></p>
+<p>For example, with <code class="docutils literal notranslate"><span class="pre">scale='p50'</span></code>, each frame is normalized using
+its median value relative to the median of the frame medians.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ariastrotools.handle_frame.shifting_frame">
+<span class="sig-prename descclassname"><span class="pre">ariastrotools.handle_frame.</span></span><span class="sig-name descname"><span class="pre">shifting_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opfilename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shifttoapply</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0.,</span> <span class="pre">0.])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluxext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ariastrotools/handle_frame.html#shifting_frame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ariastrotools.handle_frame.shifting_frame" title="Link to this definition">¶</a></dt>
+<dd><p>Shift the image extensions of a FITS file by an integer pixel offset.</p>
+<p>The specified flux extensions are shifted using <code class="docutils literal notranslate"><span class="pre">numpy.roll</span></code>, which
+performs a circular shift (pixels shifted off one edge reappear on the
+opposite edge). If corresponding variance extensions are provided, they
+are shifted by the same amount.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_fname</strong> (<em>str</em><em> or </em><em>pathlib.Path</em>) – Path to the input FITS file.</p></li>
+<li><p><strong>opfilename</strong> (<em>str</em><em> or </em><em>pathlib.Path</em>) – Path to the output FITS file.</p></li>
+<li><p><strong>shifttoapply</strong> (<em>array-like</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – Pixel shift to apply in the form <code class="docutils literal notranslate"><span class="pre">(row_shift,</span> <span class="pre">column_shift)</span></code>.
+Positive values shift the image towards increasing row or column
+indices. The default is <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0)</span></code>.</p></li>
+<li><p><strong>fluxext</strong> (<em>list</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – List of FITS extensions containing flux images to be shifted.
+The default is <code class="docutils literal notranslate"><span class="pre">[0]</span></code>.</p></li>
+<li><p><strong>varext</strong> (<em>list</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – List of FITS extensions containing variance images corresponding
+to <code class="docutils literal notranslate"><span class="pre">fluxext</span></code>. If provided, each variance extension is shifted by
+the same amount as its corresponding flux extension. The default
+is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Shifts are performed using <code class="docutils literal notranslate"><span class="pre">numpy.roll</span></code> and therefore are circular.</p></li>
+<li><p>Only integer pixel shifts are supported.</p></li>
+<li><p>The length of <code class="docutils literal notranslate"><span class="pre">varext</span></code> must match the length of <code class="docutils literal notranslate"><span class="pre">fluxext</span></code> when
+provided.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The shifted FITS file is written to <code class="docutils literal notranslate"><span class="pre">opfilename</span></code>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="instrument.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">instrument module</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="utils.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">utils module</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, Varghese Reji
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">handle frame module</a><ul>
+<li><a class="reference internal" href="#ariastrotools.handle_frame.combine_process"><code class="docutils literal notranslate"><span class="pre">combine_process()</span></code></a></li>
+<li><a class="reference internal" href="#ariastrotools.handle_frame.divide_smoothgradient"><code class="docutils literal notranslate"><span class="pre">divide_smoothgradient()</span></code></a></li>
+<li><a class="reference internal" href="#ariastrotools.handle_frame.masking_frame"><code class="docutils literal notranslate"><span class="pre">masking_frame()</span></code></a></li>
+<li><a class="reference internal" href="#ariastrotools.handle_frame.operate_process"><code class="docutils literal notranslate"><span class="pre">operate_process()</span></code></a></li>
+<li><a class="reference internal" href="#ariastrotools.handle_frame.remove_cosmic_rays"><code class="docutils literal notranslate"><span class="pre">remove_cosmic_rays()</span></code></a></li>
+<li><a class="reference internal" href="#ariastrotools.handle_frame.scale_datacube"><code class="docutils literal notranslate"><span class="pre">scale_datacube()</span></code></a></li>
+<li><a class="reference internal" href="#ariastrotools.handle_frame.shifting_frame"><code class="docutils literal notranslate"><span class="pre">shifting_frame()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>
