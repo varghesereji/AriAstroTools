@@ -407,6 +407,17 @@ def combine_process(files,
         List of FITS extensions containing variance data corresponding
         to `fluxext`. If `None`, variance is not processed. Default is `None`.
 
+    mask : array_like or str or None, optional
+        Bad-pixel mask to apply to the input data. If provided, bad pixels
+        are either interpolated or replaced with NaN according to
+        `mask_method`. Default is ``None``.
+
+    mask_method : {'interpolate', 'nan'}, optional
+        Method used to handle bad pixels when `mask` is provided and variance
+        data are available. ``'interpolate'`` replaces bad pixels by
+        interpolating from surrounding valid pixels, while ``'nan'`` replaces
+        bad pixels with NaN. Default is ``'interpolate'``.
+
     instrument : str or None, optional
         Instrument name. If provided, the function calls
         `combine_spectra` instead of the default combination logic.
