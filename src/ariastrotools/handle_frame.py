@@ -319,6 +319,10 @@ def combine_process(files,
         Combination method for data arrays (e.g., 'mean', 'median').
         Passed to `combine_data`. Default is `'mean'`.
 
+    scale : str, optional
+        Scaleing scheme to scale the frames in the datacube.
+        patterin is `'pXX'`. Default is None.
+
     fluxext : list of int, optional
         List of FITS extensions containing flux (or image) data.
         Default is `[0]`.
