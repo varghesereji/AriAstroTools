@@ -9,6 +9,8 @@ def call_mask(mask):
         return None
     if isinstance(mask, np.ndarray):
         return mask
+    mask = str(mask)
+
 
 
 def shrink_fits(filename, extensions, replace=False,
