@@ -61,6 +61,9 @@ def scale_datacube(datacube,
 
     scale_array = scale_array / np.nanmedian(scale_array)
 
+    scaled_datacube = datacube / scale_array[:, np.newaxis, np.newaxis]
+
+
 
 def masking_frame(frame, mask, variance=None, method='interpolate'):
     """
