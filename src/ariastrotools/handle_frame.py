@@ -28,6 +28,121 @@ from .utils import call_mask
 from .logger import logger
 
 
+def scale_datacube(datacube,
+                   varcube=None,
+                   scale="p50",
+                   scale_mask=None):
+    """
+    Scale the frames in a data cube using percentile-based scaling.
+
+    Each frame is assigned a scaling factor based on the specified
+    percentile. The scaling factors are normalized by their median value
+    before scaling the data cube. If a variance cube is provided, the
+    variance is scaled consistently with the data.
+
+    Parameters
+    ----------
+    datacube : numpy.ndarray
+        Input data cube with shape (n_frames, ny, nx).
+
+    varcube : numpy.ndarray or None, optional
+        Variance cube corresponding to `datacube`, with the same shape.
+        If provided, the variance is scaled by the square of the scaling
+        factor. Default is None.
+
+    scale : str, optional
+        Scaling scheme to use. Currently, only percentile-based scaling
+        in the form ``'pXX'`` is supported, where ``XX`` specifies the
+        percentile used to determine the scaling factor. For example,
+        ``'p50'`` uses the 50th percentile (median) of each frame.
+        The scaling factors are normalized by their median value.
+        Default is ``'p50'``.
+
+    scale_mask : numpy.ndarray or None, optional
+        Boolean mask identifying pixels to exclude when calculating the
+        percentile scaling factors. The same mask is applied to every
+        frame. If None, all valid (non-NaN) pixels are used.
+        Default is None.
+
+    Returns
+    -------
+    scaled_datacube : numpy.ndarray
+        Scaled data cube with the same shape as `datacube`.
+
+    scaled_varcube : numpy.ndarray or None
+        Scaled variance cube with the same shape as `varcube`, or None
+        if `varcube` was not provided.
+
+    scale_array : numpy.ndarray
+        One-dimensional array containing the normalized scaling factor
+        for each frame. The median of the scaling factors is one.
+
+    Raises
+    ------
+    ValueError
+        If `scale` does not follow the supported ``'pXX'`` format.
+
+    Notes
+    -----
+    The scaling factor for each frame is calculated from the specified
+    percentile and then normalized by the median of all frame scaling
+    factors:
+
+    ``scale_factor = percentile(frame) / median(percentile_values)``
+
+    The data and variance are then scaled as:
+
+    ``scaled_data = data / scale_factor``
+
+    ``scaled_variance = variance / scale_factor**2``
+
+    For example, with ``scale='p50'``, each frame is normalized using
+    its median value relative to the median of the frame medians.
+    """
+
+    logger.info(f"Using {scale} scheme for scaleing.")
+
+    scale_mask = call_mask(scale_mask)
+
+    if scale[0] == 'p':  # Using percentie scaling
+        percentile = float(scale[1:])
+
+        if scale_mask is None:
+            scale_array = np.nanpercentile(datacube, percentile, axis=(1, 2))
+        else:
+            scale_array = np.array(
+                [
+                    np.nanpercentile(
+                        d[~scale_mask], percentile
+                        ) for d in datacube
+                    ]
+                )
+    else:
+        logger.error(
+            f"Scale method {scale} which is not pXX not yet implemented"
+            )
+
+        raise ValueError(
+            f"Scale method {scale} which is not pXX not yet implemented"
+            )
+
+    scale_array = scale_array / np.nanmedian(scale_array)
+
+    scaled_datacube = datacube / scale_array[:, np.newaxis, np.newaxis]
+
+    logger.info(f"The datacube is being scaled with {scale_array}")
+    if varcube is None:
+        return scaled_datacube, None, scale_array
+
+    scaled_varcube = varcube / (
+        scale_array[:, np.newaxis, np.newaxis]
+        ) ** 2
+
+    logger.info("Scaleing variance")
+
+    return scaled_datacube, scaled_varcube, scale_array
+
+
 def masking_frame(frame, mask, variance=None, method='interpolate'):
     """
     Apply a bad-pixel mask to a data frame.
@@ -234,6 +349,7 @@ def combine_process(files,
                     opfilename,
                     path='.',
                     method='mean',
+                    scale=None,
                     fluxext=[0],
                     varext=None,
                     mask=None,
@@ -272,6 +388,15 @@ def combine_process(files,
     method : str, optional
         Combination method for data arrays (e.g., 'mean', 'median').
         Passed to `combine_data`. Default is `'mean'`.
+
+    scale : str or None, optional
+        Percentile-based scaling scheme used to normalize the input frames
+        before combination. The value should follow the ``'pXX'`` format,
+        where ``XX`` specifies the percentile used to determine the scaling
+        factor. For example, ``'p50'`` uses the 50th percentile (median) of
+        each frame for scaling. The corresponding variance arrays are
+        scaled consistently. If ``None``, no scaling is applied.
+        Default is ``None``.
 
     fluxext : list of int, optional
         List of FITS extensions containing flux (or image) data.
@@ -367,6 +492,17 @@ def combine_process(files,
             if varext is not None:
                 variance = var_array[0]
         else:
+            if scale is not None:
+                data_array, var_array, scale_array = scale_datacube(
+                    datacube=data_array,
+                    varcube=var_array,
+                    scale=scale,
+                    scale_mask=mask
+                )
+                header.add_history(
+                    f"Arrays are scaled with {list(scale_array)}"
+                )
+
             result, variance = combine_data(dataarr=data_array,
                                             var=var_array,
                                             method=method)
