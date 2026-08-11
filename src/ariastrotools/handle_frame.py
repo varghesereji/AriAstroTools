@@ -417,6 +417,12 @@ def combine_process(files,
             if varext is not None:
                 variance = var_array[0]
         else:
+            if scale is not None:
+                data_array, var_array, _ = scale_datacube(
+                    datacube=data_array,
+                    varcube=var_array,
+                    scale=scale,
+                    scale_mask=mask)
             result, variance = combine_data(dataarr=data_array,
                                             var=var_array,
                                             method=method)
